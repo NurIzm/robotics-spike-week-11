@@ -1,0 +1,430 @@
+/* Lesson: one long page for a projector. Every section takes the form of its idea; colours come from the kit. */
+
+/* At height:100% the body ends after one screen and the sticky top bar scrolls away with it. */
+body[data-view="lesson"] { height: auto; min-height: 100%; }
+
+.les {
+  --pad: clamp(16px, 5vw, 96px);
+  --screen: calc(100vh - var(--topbar-h));
+  --h2: clamp(28px, min(3.6vw, 6.4vh), 72px);
+  font-size: clamp(19px, 0.9vw + 11px, 28px);
+  line-height: 1.42;
+}
+.les-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
+.les h2 { font-size: var(--h2); }
+.les h3 { font-size: calc(var(--h2) * 0.6); }
+.les-sec {
+  display: flex; flex-direction: column; justify-content: center; gap: clamp(16px, 3vh, 36px);
+  min-height: var(--screen);
+  padding: clamp(28px, 6vh, 64px) var(--pad);
+  scroll-margin-top: var(--topbar-h);
+}
+.les-lead { max-width: 46em; margin-top: 10px; color: var(--ink-2); }
+.les input[type="range"] { width: 100%; height: 32px; margin: 0; accent-color: var(--magenta); cursor: pointer; }
+.les-range { display: block; font-weight: 700; }
+.les dl { margin: 0; }
+.les dd { margin: 0; }
+
+/* ---------- Header: the same yellow as the start screen, the route is a beam with a hole for each stop ---------- */
+.les-head {
+  display: flex; flex-direction: column; justify-content: space-between; gap: clamp(20px, 4vh, 48px);
+  min-height: var(--screen);
+  padding: clamp(28px, 6vh, 72px) var(--pad);
+  background: var(--yellow);
+}
+.les-head__kicker { font-weight: 700; }
+.les-head h1 { font-size: clamp(33px, min(7.2vw, 13vh), 136px); font-weight: 900; line-height: 1.02; letter-spacing: -0.01em; }
+.les-head__mid { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 16px 48px; }
+.les-head__facts { display: flex; flex-wrap: wrap; gap: 12px clamp(24px, 3vw, 48px); }
+.les-head__facts dt { font-size: 0.8em; font-weight: 700; }
+.les-head__facts dd { font: 700 1.1em/1.3 var(--font-mono); word-spacing: -0.3em; white-space: nowrap; }
+.les-head__goal { flex: 1 1 26em; max-width: 34em; font-size: 1.1em; line-height: 1.34; }
+.les-head__goal b { display: block; font-size: 0.8em; }
+.les-route h2 { margin-bottom: 14px; font-size: calc(var(--h2) * 0.5); }
+.les-route ol { position: relative; display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); margin: 0; padding: 0; list-style: none; }
+.les-route ol::before {
+  content: ""; position: absolute; left: 0; right: 0; top: 0; height: 32px; border-radius: 16px;
+  background: var(--magenta); box-shadow: inset 0 -3px 0 var(--magenta-deep);
+}
+.les-route button {
+  position: relative; display: block; width: 100%; padding: 42px 10px 4px 6px;
+  border: 0; background: none; color: var(--ink);
+  font-size: 0.8em; font-weight: 700; line-height: 1.22; text-align: left; cursor: pointer;
+}
+.les-route button:hover { text-decoration: underline; text-underline-offset: 3px; }
+.les-route button::before {
+  content: ""; position: absolute; left: 6px; top: 5px; width: 22px; height: 22px; border-radius: 50%;
+  background: var(--magenta-deep); box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.45), 0 0 0 2px rgba(255, 255, 255, 0.28);
+}
+.les-route li:first-child button::before { left: 8px; }
+
+/* ---------- Three models: columns whose rows line up ---------- */
+.les-was { background: var(--paper); }
+.les-vs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(5, auto); gap: 0 clamp(16px, 3vw, 48px); }
+.les-vs__col { display: grid; grid-row: span 5; grid-template-rows: subgrid; min-width: 0; }
+.les-vs__pic { display: block; width: 100%; height: clamp(110px, 20vh, 220px); padding: 12px; background: var(--mist); border-bottom: 6px solid var(--ink); }
+.les-vs__col--now .les-vs__pic { border-color: var(--magenta); }
+.les-vs__col h3 { padding-top: 10px; }
+.les-vs__col h3 span { display: block; font: 700 0.5em/1.4 var(--font-body); text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-2); }
+.les-vs__col--now h3 span { color: var(--magenta-deep); }
+.les-vs dl { display: contents; }
+.les-vs dl > div { padding: 6px 0; border-bottom: 1px solid var(--line); font-size: 0.9em; line-height: 1.28; }
+.les-vs dt { font-weight: 800; }
+.les-vs dd { color: var(--ink-2); }
+.les-vs__col--now dd { color: var(--ink); }
+.les-was__sum { max-width: 52em; padding: 10px 16px; border-left: 8px solid var(--magenta); background: var(--mist); }
+
+/* ---------- Chips: radio buttons that look like the pieces you pick ---------- */
+.les-chips { margin: 0; padding: 0; border: 0; min-width: 0; }
+.les-chips legend { padding: 0; margin-bottom: 8px; font-weight: 800; }
+.les-chips label { position: relative; display: inline-block; margin: 0 6px 8px 0; }
+.les-chips input { position: absolute; width: 1px; height: 1px; opacity: 0; margin: 0; }
+.les-chips span {
+  display: inline-flex; align-items: center; min-height: 48px; padding: 6px 16px;
+  border: 3px solid var(--ink); border-radius: 24px; background: var(--paper);
+  font-size: 0.86em; font-weight: 700; line-height: 1.15; cursor: pointer;
+}
+.les-chips span:hover { background: var(--mist); }
+.les-chips input:checked + span { background: var(--magenta); border-color: var(--magenta); color: #fff; }
+.les-chips input:focus-visible + span { outline: 3px solid var(--azure); outline-offset: 2px; }
+
+/* ---------- How many fingers: jaws close on an object, seen from above ---------- */
+.les-fing { background: var(--mist); }
+.les-fing__lab { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr) minmax(0, 1fr); gap: 16px clamp(16px, 3vw, 48px); align-items: center; }
+.les-fing__pick { display: flex; flex-direction: column; gap: 14px; }
+.les-fing__fig { margin: 0; }
+.les-fing__fig svg { display: block; width: 100%; max-width: 50vh; height: auto; aspect-ratio: 1; margin: 0 auto; background: var(--paper); border-radius: 50%; }
+.les-fing__fig figcaption { margin-top: 8px; font-size: 0.72em; color: var(--ink-2); text-align: center; }
+.les-fing__ring { fill: none; stroke: var(--line); stroke-width: 2; stroke-dasharray: 4 6; }
+.les-fing__cube { fill: var(--yellow); stroke: var(--ink); stroke-width: 2.5; }
+.les-fing__stud { fill: #ffe866; stroke: #c9a800; stroke-width: 2; }
+.les-fing__ball { fill: var(--azure); stroke: var(--ink); stroke-width: 2.5; }
+.les-fing__seam { fill: none; stroke: #fff; stroke-width: 3; }
+.les-fing__pencil { fill: var(--yellow); stroke: var(--ink); stroke-width: 2; stroke-linejoin: round; }
+.les-fing__wood { fill: #f1d3a1; }
+.les-fing__lead { fill: var(--black); }
+.les-fing__apple { fill: #d01012; stroke: var(--ink); stroke-width: 2.5; }
+.les-fing__stem { fill: none; stroke: #6b4a2b; stroke-width: 3.5; stroke-linecap: round; }
+.les-fing__leaf { fill: var(--ok); }
+.les-jaw { fill: #3c4148; stroke: var(--ink); stroke-width: 2.5; transition: transform 0.45s ease; }
+.les-fing__dot { fill: var(--magenta); stroke: #fff; stroke-width: 2.5; }
+.les-fing__flat { stroke: var(--magenta); stroke-width: 8; stroke-linecap: round; }
+.is-live .les-fing__dot, .is-live .les-fing__flat { animation: les-pop 0.6s ease both; }
+@keyframes les-pop { 0%, 60% { opacity: 0; } 100% { opacity: 1; } }
+.les-fing__out { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.les-fing__touch { font-size: 0.8em; font-weight: 700; color: var(--ink-2); }
+.les-fing__v { font: 800 calc(var(--h2) * 0.8)/1.1 var(--font-body); color: var(--ok); }
+.les-fing__v.is-no { color: var(--warn); }
+.les-fing__why { font-size: 0.9em; line-height: 1.32; }
+.les-fing__note { max-width: 52em; font-size: 0.8em; color: var(--ink-2); }
+.les-thumb { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px clamp(16px, 3vw, 48px); }
+.les-thumb p { padding: 8px 14px; border-left: 8px solid var(--azure); background: var(--paper); font-size: 0.9em; line-height: 1.32; }
+.les-thumb p + p { border-color: var(--yellow); }
+
+/* ---------- Our hand: the model, its parts, ports and two small mechanisms ---------- */
+.les-hand { background: var(--paper); }
+.les-hand__bench { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: clamp(16px, 3vw, 48px); align-items: stretch; }
+.les-hand__stage { position: relative; min-height: clamp(300px, 58vh, 760px); background: var(--mist); cursor: grab; }
+.les-hand__stage:active, .les-try__stage:active, .les-build__stage:active { cursor: grabbing; }
+.les-hand__panel { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.les-parts { display: flex; flex-wrap: wrap; gap: 8px; }
+.les-parts button {
+  min-height: 44px; padding: 6px 14px; border: 2px solid var(--ink); border-radius: 22px;
+  background: var(--paper); font-size: 0.8em; font-weight: 700; line-height: 1.15; cursor: pointer;
+}
+.les-parts button:hover { background: var(--mist); }
+.les-parts button[aria-pressed="true"] { background: var(--magenta); border-color: var(--magenta); color: #fff; }
+.les-part { padding: 10px 14px; border-left: 8px solid var(--magenta); background: var(--mist); }
+.les-part p { margin-top: 4px; font-size: 0.9em; line-height: 1.3; color: var(--ink-2); }
+.les-hand__more { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.85fr) minmax(0, 1fr); gap: 24px clamp(16px, 3vw, 48px); align-items: start; }
+.les-hand__ports h3 { margin-bottom: 8px; }
+.les-tab.les-ptab td { padding: 4px 10px; font-size: 0.8em; line-height: 1.22; }
+.les-tab.les-ptab tbody th { width: 1%; padding: 4px; }
+.les-port {
+  display: grid; place-items: center; width: 40px; height: 40px; border: 0; border-radius: 50%;
+  background: var(--ink); color: #fff; font: 700 20px/1 var(--font-mono); cursor: pointer;
+}
+.les-port:hover { background: var(--magenta); }
+.les-how, .les-gears { display: flex; flex-direction: column; gap: 8px; margin: 0; }
+.les-how svg, .les-gears svg { display: block; width: 100%; height: auto; max-height: 32vh; background: var(--mist); }
+.les-how figcaption, .les-gears figcaption { font-size: 0.8em; line-height: 1.3; color: var(--ink-2); }
+.les-how b, .les-gears b { display: block; color: var(--ink); }
+.les-how__arc { fill: none; stroke: var(--magenta); stroke-width: 4; stroke-dasharray: 3 8; stroke-linecap: round; }
+.les-how__tip { fill: var(--magenta); }
+.les-how__motor { fill: var(--azure); stroke: var(--ink); stroke-width: 2.5; }
+.les-how__finger path { fill: none; stroke: var(--black); stroke-width: 15; stroke-linecap: round; stroke-linejoin: round; }
+.les-how__finger circle { fill: #fff; }
+.les-how__finger { transform-origin: 85px 135px; }
+.is-live .les-how__finger { animation: les-curl 4.4s ease-in-out infinite; }
+@keyframes les-curl { 0%, 18% { transform: rotate(0); } 45%, 70% { transform: rotate(90deg); } 92%, 100% { transform: rotate(0); } }
+.les-how__rotor { fill: #fff; stroke: var(--ink); stroke-width: 2.5; }
+.les-how__axle { stroke: var(--ink); stroke-width: 3; stroke-linecap: round; }
+.les-gears__wheel { fill: #c4cace; stroke: #6b7680; stroke-width: 1.5; stroke-linejoin: round; }
+.les-gears__hub { fill: var(--paper); stroke: var(--ink); stroke-width: 2.5; }
+.les-gears__mark { stroke: var(--magenta); stroke-width: 5; stroke-linecap: round; }
+.les-gears__thumb { fill: none; stroke: var(--yellow); stroke-width: 12; stroke-linecap: round; stroke-linejoin: round; }
+.les-gears__thumb--edge { stroke: var(--ink); stroke-width: 17; }
+.les-gears__lbl { font: 700 15px var(--font-body); fill: var(--ink-2); text-anchor: middle; }
+.les-gears__out { font: 700 0.72em/1.3 var(--font-mono); }
+
+/* ---------- SPIKE-looking blocks, drawn in HTML: colours of week 9 §6 ---------- */
+.blk {
+  --f: #0090F5; --s: #0078CC; --e: #0062A6;
+  position: relative; display: inline-flex; flex-wrap: wrap; align-items: center; gap: 4px 6px;
+  min-height: 2.6em; padding: 0.3em 0.6em 0.3em 0.3em;
+  max-width: 100%; border: 1px solid var(--e); border-radius: 0.3em; background: var(--f); color: #fff;
+  font: 500 1em/1.1 "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+.blk--motor { --f: #0090F5; --s: #0078CC; --e: #0062A6; }
+.blk--event { --f: #F5C402; --s: #C8A300; --e: #B09400; }
+.blk__ico { width: 2em; height: 2em; flex: none; padding-right: 0.3em; border-right: 1px solid var(--s); color: var(--s); box-sizing: content-box; }
+.blk__port {
+  display: inline-grid; place-items: center; width: 1.6em; height: 1.6em; border-radius: 50%;
+  background: var(--s); border: 1px solid var(--e); font-weight: 700;
+}
+.blk__dd, .blk__num, .blk__port { white-space: nowrap; }
+.blk__dd { padding: 0.25em 0.45em; border: 1px solid var(--e); border-radius: 0.25em; background: var(--s); }
+.blk__dd::after { content: " ▾"; font-size: 0.8em; }
+.blk__dd--sw i { display: inline-block; width: 1.1em; height: 1.1em; margin-right: 0.35em; border: 1.5px solid #fff; border-radius: 50%; vertical-align: -0.2em; }
+.blk__dd--sw i.is-none { background: linear-gradient(135deg, transparent 43%, #fff 43% 57%, transparent 57%); }
+.blk__num { min-width: 2em; padding: 0.25em 0.6em; border-radius: 1em; background: #fff; color: #575e75; text-align: center; }
+.blk--hat { border-radius: 1.2em 0.3em 0.3em 0.3em; padding-top: 0.6em; }
+/* A stack: each block's tab sits in the notch of the block below. */
+.les-prog { display: flex; flex-direction: column; align-items: flex-start; font-size: clamp(12px, 0.6em, 17px); }
+.les-prog > .blk:not(:last-child)::after {
+  content: ""; position: absolute; z-index: 1; left: 0.9em; bottom: -0.45em; width: 1.6em; height: 0.45em;
+  background: var(--f); border: 1px solid var(--e); border-top: 0; border-radius: 0 0 0.3em 0.3em;
+}
+
+/* ---------- The program: six stacks, and the hand to try them on, which stays in view while you read ---------- */
+.les-code { background: var(--mist); }
+.les-code__bench { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 24px clamp(16px, 3vw, 48px); align-items: start; }
+.les-stacks { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 22em), 1fr)); gap: 24px clamp(16px, 3vw, 40px); align-items: start; min-width: 0; }
+.les-stacks__group { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.les-stacks__group h3 { font-size: calc(var(--h2) * 0.45); }
+.les-stack { display: flex; flex-direction: column; gap: 8px; padding-top: 10px; border-top: 4px solid var(--ink); }
+.les-stack > p { font-size: 0.8em; line-height: 1.3; color: var(--ink-2); }
+/* SPIKE lights up a running stack. */
+.les-stack .les-prog { transition: filter 0.2s; }
+.les-stack.is-run .les-prog { filter: drop-shadow(0 0 2px #ffd500) drop-shadow(0 0 5px #ffd500); }
+.les-try { position: sticky; top: calc(var(--topbar-h) + 12px); display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.les-try__stage { position: relative; height: clamp(240px, 46vh, 600px); background: var(--paper); cursor: grab; }
+.les-try__panel { display: flex; flex-direction: column; gap: 8px; }
+.les-try__lbl { font-size: 0.8em; font-weight: 800; }
+.les-switch { display: grid; grid-template-columns: 1fr 1fr; border: 3px solid var(--ink); border-radius: 14px; overflow: hidden; }
+.les-switch--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.les-switch button { min-height: 52px; padding: 6px 8px; border: 0; background: var(--paper); font-size: 0.8em; font-weight: 800; line-height: 1.15; cursor: pointer; }
+.les-switch button + button { border-left: 3px solid var(--ink); }
+.les-switch button[aria-pressed="true"] { background: var(--magenta); color: #fff; }
+.les-switch button:focus-visible { outline-offset: -6px; outline-color: var(--yellow); }
+.les-card {
+  display: inline-flex; align-items: center; gap: 12px; align-self: flex-start; min-height: 52px; padding: 6px 18px 6px 12px;
+  border: 3px solid var(--ink); border-radius: 14px; background: var(--paper); font-size: 0.8em; font-weight: 800; cursor: pointer;
+}
+.les-card i { width: 22px; height: 30px; border-radius: 3px; background: #e3000b; box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--ink); }
+.les-card[aria-pressed="true"] { background: var(--magenta); color: #fff; }
+.les-try__read { display: flex; flex-wrap: wrap; gap: 6px 22px; font: 700 1em/1.3 var(--font-mono); }
+.les-try__read output { display: inline-block; min-width: 3ch; text-align: right; }
+.les-try__hint { font-size: 0.72em; line-height: 1.3; color: var(--ink-2); }
+
+/* ---------- Improving the model: the loop is a beam, its last hole leads back to the first ---------- */
+.les-better { background: var(--paper); }
+.les-cycle ol { position: relative; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; margin: 0; padding: 0; list-style: none; }
+.les-cycle ol::before {
+  content: ""; position: absolute; left: 0; right: 0; top: 0; height: 32px; border-radius: 16px;
+  background: var(--azure); box-shadow: inset 0 -3px 0 var(--azure-deep);
+}
+.les-cycle li { position: relative; padding: 42px 8px 0 4px; font-size: 0.86em; line-height: 1.25; color: var(--ink-2); }
+.les-cycle li::before {
+  content: ""; position: absolute; left: 8px; top: 5px; width: 22px; height: 22px; border-radius: 50%;
+  background: var(--azure-deep); box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.45), 0 0 0 2px rgba(255, 255, 255, 0.28);
+}
+.les-cycle li:not(:last-child)::after { content: "→"; position: absolute; right: -10px; top: 1px; color: #fff; font-weight: 800; line-height: 30px; }
+.les-cycle li:last-child::after { content: "↺"; position: absolute; right: 12px; top: 1px; color: #fff; font-weight: 800; line-height: 30px; }
+.les-cycle li b { display: block; font-size: 1.08em; color: var(--ink); }
+.les-ideas { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px clamp(16px, 2.4vw, 40px); }
+.les-idea { display: flex; flex-direction: column; gap: 8px; min-width: 0; padding-top: 10px; border-top: 6px solid var(--ink); }
+.les-idea h3 { font-size: calc(var(--h2) * 0.45); }
+.les-idea p { font-size: 0.86em; line-height: 1.3; color: var(--ink-2); }
+.les-idea .les-idea__try { margin-top: auto; padding-top: 4px; font-weight: 700; color: var(--magenta-deep); }
+
+/* ---------- Own grip: answers on the left, the passport is a beam-topped tag ---------- */
+.les-own { background: var(--mist); }
+.les-own__bench { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 24px clamp(16px, 3vw, 48px); align-items: start; }
+.les-plan { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.les-plan__name { display: flex; flex-direction: column; gap: 6px; margin-bottom: 6px; font-weight: 800; }
+.les-plan__name input {
+  width: 100%; max-width: 20em; min-height: 48px; padding: 6px 14px;
+  border: 3px solid var(--ink); border-radius: 12px; background: var(--paper); font: 600 0.9em var(--font-body); color: var(--ink);
+}
+.les-plan__name input:focus-visible { outline-offset: 2px; }
+.les-plan .les-chips span { min-height: 44px; font-size: 0.78em; }
+.les-pass { min-width: 0; border: 3px solid var(--ink); border-radius: 14px; overflow: hidden; background: var(--paper); box-shadow: 0 4px 0 var(--ink); }
+.les-pass__head { padding: 10px 16px 14px; background: var(--magenta); color: #fff; }
+.les-pass__head::before {
+  content: ""; display: block; height: 20px; margin-bottom: 8px;
+  background: radial-gradient(circle, var(--magenta-deep) 7px, transparent 8px) 0 0 / 30px 20px repeat-x;
+}
+.les-pass__head span { font-size: 0.66em; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+.les-pass__head h3 { overflow-wrap: anywhere; }
+.les-pass__rows { padding: 4px 16px; }
+.les-pass__rows > div { display: grid; grid-template-columns: minmax(6em, 0.8fr) minmax(0, 1.2fr); gap: 2px 10px; padding: 5px 0; border-bottom: 1px solid var(--line); font-size: 0.78em; line-height: 1.25; }
+.les-pass__rows dt { font-weight: 800; }
+.les-pass__tips, .les-pass__wait { margin: 10px 16px; padding: 8px 12px; border-left: 8px solid var(--yellow); background: var(--mist); font-size: 0.78em; line-height: 1.3; }
+.les-pass__tips b { font-weight: 800; }
+.les-pass__tips ul { margin: 4px 0 0; padding-left: 1.1em; }
+.les-pass__tips li + li { margin-top: 4px; }
+.les-pass__wait { color: var(--ink-2); }
+.les-tab.les-pass__test { width: calc(100% - 32px); margin: 6px 16px 12px; }
+.les-pass__clear { margin: 0 16px 16px; }
+.les-rules { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px clamp(16px, 3vw, 48px); }
+.les-rules h3 { font-size: calc(var(--h2) * 0.45); }
+.les-rules ol { margin: 8px 0 0; padding-left: 1.3em; font-size: 0.86em; line-height: 1.3; }
+.les-rules li + li { margin-top: 6px; }
+
+/* ---------- Tables the class fills in on the projector ---------- */
+.les-tab { width: 100%; border-collapse: collapse; }
+.les-tab th, .les-tab td { padding: 0; border: 2px solid var(--ink); text-align: left; }
+.les-tab thead th { padding: 6px 10px; background: var(--ink); color: #fff; font-size: 0.8em; }
+.les-tab tbody th { padding: 6px 10px; font-size: 0.8em; line-height: 1.2; }
+.les-cell { display: grid; place-items: center; width: 100%; min-height: 52px; padding: 4px; border: 0; background: var(--paper); cursor: pointer; font-weight: 700; }
+.les-cell:hover { background: var(--mist); }
+.les-cell:focus-visible { outline-offset: -5px; }
+.les-cell.is-yes { background: #dff3e8; color: var(--ok); }
+.les-cell.is-no { background: #fbe6dc; color: var(--warn); }
+.les-cell b { font: 800 1.3em/1 var(--font-body); }
+.les-cell small { display: block; font-size: 0.6em; }
+
+/* ---------- Build: one beam, one hole per instruction step ---------- */
+.les-build { background: var(--paper); }
+.les-credit { margin-top: 8px; font-weight: 700; }
+.les-build__bench { display: grid; grid-template-columns: minmax(0, 1.75fr) minmax(0, 1fr); gap: clamp(16px, 3vw, 48px); align-items: stretch; }
+.les-build__stage { position: relative; min-height: clamp(240px, 46vh, 640px); background: var(--mist); cursor: grab; }
+.les-build__card { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.les-build__steps { font: 700 0.8em/1.3 var(--font-mono); color: var(--magenta-deep); }
+.les-build__parts { font-size: 0.86em; line-height: 1.28; color: var(--ink-2); }
+.les-build__parts b { display: block; color: var(--ink); }
+.les-build__nav { display: flex; gap: 12px; margin-top: auto; padding-top: 8px; }
+.les-build__nav .btn { flex: 1; padding: 0 12px; }
+.les-build__nav .btn:disabled { opacity: 0.4; cursor: default; }
+
+.les-rail { display: flex; margin: 0; padding: 0; list-style: none; }
+.les-rail > li { min-width: 0; }
+.les-rail button {
+  display: flex; align-items: center; justify-content: space-around; width: 100%; height: clamp(34px, 3.4vw, 44px); padding: 0 2px;
+  border: 0; background: var(--magenta); box-shadow: inset 0 -3px 0 var(--magenta-deep); cursor: pointer;
+}
+.les-rail li + li button { border-left: 2px solid var(--magenta-deep); }
+.les-rail li:first-child button { border-radius: 22px 0 0 22px; }
+.les-rail li:last-child button { border-radius: 0 22px 22px 0; }
+.les-rail button:hover { background: #d94494; }
+.les-rail button:focus-visible { outline-offset: -4px; outline-color: var(--yellow); }
+.les-rail i {
+  display: block; flex: none; width: clamp(11px, 1.5vw, 22px); aspect-ratio: 1; border-radius: 50%;
+  background: var(--magenta-deep); box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.28);
+}
+.les-rail .is-done i, .les-rail .is-now i { background: radial-gradient(circle at 40% 35%, #fff2a8, var(--yellow) 60%); }
+.les-rail .is-now button { background: var(--ink); box-shadow: none; }
+.les-rail span { display: block; padding-top: 6px; font: 700 clamp(11px, 0.62em, 17px)/1.2 var(--font-mono); color: var(--ink-2); text-align: center; white-space: nowrap; }
+
+.les-build__how { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 32px; }
+.les-build__how > p:first-child { flex: 1 1 24em; }
+.les-ports { display: flex; flex-wrap: wrap; gap: 10px; }
+.les-ports span { display: inline-flex; align-items: center; gap: 10px; padding: 4px 4px 4px 14px; border-radius: 26px; background: var(--paper); border: 2px solid var(--ink); font-size: 0.86em; font-weight: 700; }
+.les-ports b { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: var(--ink); color: #fff; font: 700 19px/1 var(--font-mono); }
+.les-build__take { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: clamp(16px, 3vw, 48px); align-items: center; }
+.les-build__take p { font-size: 0.86em; line-height: 1.28; color: var(--ink-2); }
+
+/* ---------- Ladder: the higher the step, the more the machine decides ---------- */
+.les-auto { background: var(--magenta); color: #fff; }
+.les-auto__head p { max-width: 42em; margin-top: 10px; }
+.les-ladder { --rise: clamp(48px, 9vh, 110px); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 3px; margin: 0; padding: 0; list-style: none; color: var(--ink); }
+.les-ladder li { position: relative; display: flex; flex-direction: column; gap: 6px; padding: 16px clamp(12px, 1.6vw, 24px) 18px; background: var(--paper); font-size: 0.9em; line-height: 1.3; }
+.les-ladder li:nth-child(1) { margin-top: calc(var(--rise) * 2); }
+.les-ladder li:nth-child(2) { margin-top: var(--rise); background: var(--yellow); }
+.les-ladder li:nth-child(3) { background: var(--azure); }
+.les-ladder__pic { display: block; width: 100%; height: clamp(64px, 10vh, 110px); padding: 6px; border-radius: 8px; background: #fff; }
+.les-ladder__who { font-weight: 800; }
+.les-ladder__next { margin-top: auto; padding-top: 6px; border-top: 2px dashed var(--ink); font-weight: 600; }
+
+/* ---------- Quiz ---------- */
+.les-quiz { background: var(--yellow); }
+.les-quiz__head { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 24px; }
+.les-quiz__pins { display: flex; gap: 8px; }
+.les-quiz__pins i {
+  display: block; width: 26px; height: 26px; border-radius: 50%;
+  background: var(--paper); box-shadow: inset 0 0 0 3px var(--ink);
+}
+.les-quiz__pins i.is-now { box-shadow: inset 0 0 0 6px var(--ink); }
+.les-quiz__pins i.is-right { background: var(--ok); }
+.les-quiz__pins i.is-wrong { background: linear-gradient(45deg, transparent 43%, #fff 43% 57%, transparent 57%), var(--warn); }
+.les-quiz__last { font-weight: 600; }
+.les-quiz__box { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px clamp(24px, 4vw, 72px); align-items: start; min-height: 21em; }
+.les-quiz__ask { display: flex; flex-direction: column; gap: 14px; }
+.les-quiz__q { font: 800 calc(var(--h2) * 0.84)/1.16 var(--font-body); }
+.les-opts { display: grid; gap: 12px; }
+.les-opt {
+  display: flex; align-items: center; width: 100%; min-height: 60px; padding: 10px 20px;
+  border: 3px solid var(--ink); border-radius: 12px; background: var(--paper); color: var(--ink);
+  font-size: 1.05em; font-weight: 700; line-height: 1.2; text-align: left; cursor: pointer;
+  box-shadow: 0 3px 0 var(--ink);
+}
+.les-opt:hover:enabled { transform: translateY(1px); box-shadow: 0 2px 0 var(--ink); }
+.les-opt:disabled { cursor: default; box-shadow: none; }
+.les-opt.is-right { background: var(--ok); color: #fff; }
+.les-opt.is-wrong { background: var(--warn); color: #fff; }
+.les-opt.is-right::after, .les-opt.is-wrong::after { margin-left: auto; padding-left: 12px; font-size: 0.72em; }
+.les-opt.is-right::after { content: "Верно"; }
+.les-opt.is-wrong::after { content: "Твой ответ"; }
+.les-quiz__why b { font-weight: 800; }
+.les-quiz__foot { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.les-quiz__end { display: flex; flex-direction: column; gap: 14px; grid-column: 1 / -1; }
+.les-quiz__score { font: 700 clamp(64px, 11vw, 160px)/1 var(--font-mono); word-spacing: -0.3em; }
+
+.les-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 32px; padding: 28px var(--pad); background: var(--paper); }
+.les-foot__next { min-height: 56px; padding: 0 32px; font-size: 19px; }
+.les-foot p { flex: 1 1 320px; max-width: 44em; font-size: 15px; line-height: 1.35; color: var(--ink-2); }
+
+/* ---------- Narrow screens ---------- */
+@media (max-width: 1100px) {
+  .les-route ol { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: 14px; }
+  .les-route ol::before { display: none; }
+  .les-route button { padding: 0 8px 0 40px; }
+  .les-route button::before, .les-route li:first-child button::before { left: 6px; top: 0; background: var(--magenta); }
+  .les-fing__lab { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .les-fing__out { grid-column: 1 / -1; }
+  .les-hand__more { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .les-hand__ports { grid-column: 1 / -1; }
+  .les-code__bench { grid-template-columns: minmax(0, 1fr); }
+  .les-try { position: static; display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 16px 24px; align-items: start; }
+  .les-ideas { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 860px) {
+  .les-sec, .les-head { min-height: 0; }
+  .les-route ol { grid-template-columns: minmax(0, 1fr); row-gap: 0; }
+  .les-route button { padding-block: 12px; }
+  .les-route button::before, .les-route li:first-child button::before { top: 12px; }
+
+  .les-vs { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; row-gap: 24px; }
+  .les-vs__col { grid-row: auto; grid-template-rows: none; }
+  .les-cycle ol { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .les-cycle ol::before { display: none; }
+  .les-cycle li { padding: 0 4px 0 36px; }
+  .les-cycle li::before { left: 0; top: 2px; background: var(--azure); }
+  .les-cycle li::after { display: none; }
+
+  .les-fing__lab, .les-thumb, .les-hand__bench, .les-hand__more, .les-try, .les-own__bench, .les-rules, .les-build__bench, .les-build__take { grid-template-columns: minmax(0, 1fr); }
+  .les-fing__fig svg { max-width: 360px; margin: 0 auto; }
+  .les-hand__stage { min-height: 320px; }
+  .les-try__stage { height: 320px; }
+  .les-build__stage { min-height: 300px; }
+
+  .les-ladder { grid-template-columns: minmax(0, 1fr); }
+  .les-ladder li:nth-child(1), .les-ladder li:nth-child(2) { margin-top: 0; }
+  .les-quiz__box { grid-template-columns: minmax(0, 1fr); min-height: 0; }
+}
+@media (max-width: 560px) {
+  .les-cycle ol, .les-ideas { grid-template-columns: minmax(0, 1fr); }
+  .les-switch button { font-size: 0.72em; padding-inline: 4px; }
+  .les-pass__rows > div { grid-template-columns: minmax(0, 1fr); }
+}
