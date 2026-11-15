@@ -140,7 +140,7 @@ plain descriptions you can see in the pictures, no counts you cannot verify. Ref
 
 ## 4. Start view (`js/hero.js`, `css/start.css`, `src/views/start.html`, owner: model)
 
-As week 10, new model and words. The model dead centre, largest thing on the screen, slow turntable starting from the palm side;
+As week 10, new model and words. The model dead centre, largest thing on the screen, slow turntable starting from the back of the hand, the PDF cover's view (hub screen and cover);
 now and then: finger C closes, then A, then the thumb, a short hold, all open (the designer's sequence). Display title «КИСТЬ»,
 kicker «Робот-рука, модель 3». Spec strip: Моторы: A, C, E · Датчики: B, D, F · Пальцев: 3 · Время: 1 час.
 Button «Начать урок» → lesson. `RA.reducedMotion`: still until dragged.

@@ -78,7 +78,7 @@
     return m;
   }
 
-  // A stage looking at the hand from a direction: az 0 is the palm side (+Z), negative az turns to the thumb's side (-X).
+  // A stage looking at the hand from a direction: az 0 is the palm side (+Z), negative az turns to finger A's side (-X), positive to the thumb's (+X).
   function handStage(el, az, el2) {
     const dir = [Math.sin(az) * Math.cos(el2), Math.sin(el2), Math.cos(az) * Math.cos(el2)];
     const stage = RA.stage(el, { fov: 22, maxDpr: 1.5, camera: dir.map((v, i) => v * 100 + (i === 1 ? 14 : 0)), target: [0, 14, 0] });
@@ -130,21 +130,38 @@
   }
 
   /* ---------- Our hand: parts, ports, how a finger and the thumb's gears move ---------- */
-  const FRONT = [-0.6, 0.32], BACK = [Math.PI - 0.8, 0.36];
+  // Views [az, el]: the palm from finger A's side, the palm from the thumb's side, the back (hub screen, cover) from the thumb's
+  // side as on page 53 of the instructions.
+  const FRONT = [-0.6, 0.32], RIGHT = [0.55, 0.4], BACK = [Math.PI - 0.7, 0.36];
+  // The hub's screen faces the back; the thumb and the colour sensor's lens face +X. Every other part shows best from the palm.
+  const VIEW = { hub: BACK, thumb: RIGHT, controls: RIGHT };
+
+  // Turns the camera round its target to a view [az, el], the short way round the side, until someone drags the model.
+  function turner(stage) {
+    const sph = new T.Spherical(), off = new T.Vector3(), c = stage.controls;
+    let az = 0, polar = 0, turning = false;
+    if (c) c.addEventListener('start', () => { turning = false; });   // a drag wins over the automatic turn
+    return {
+      to([a, el]) { az = a; polar = Math.PI / 2 - el; turning = true; },
+      step(dt) {
+        if (!turning || !c) return;
+        sph.setFromVector3(off.copy(stage.camera.position).sub(c.target));   // theta is our az, phi is measured from straight up
+        const k = live ? 1 - Math.exp(-dt * 3) : 1;
+        const da = Math.atan2(Math.sin(az - sph.theta), Math.cos(az - sph.theta)), dp = polar - sph.phi;
+        sph.theta += da * k;
+        sph.phi += dp * k;
+        if (Math.abs(da) + Math.abs(dp) < 0.01) turning = false;
+        stage.camera.position.copy(c.target).add(off.setFromSpherical(sph));
+      },
+    };
+  }
 
   function makeHand(root, sel) {
     const stage = handStage($('#les-hand-stage', root), ...FRONT);
-    const h = RA.createHand(), fit = fitter(stage, h.group), c = stage.controls;
+    const h = RA.createHand(), fit = fitter(stage, h.group), turn = turner(stage);
     stage.scene.add(h.group, shadowCatcher());
     fit.measure(h.box);
     const list = $('#les-parts', root), name = $('#les-part-name', root), role = $('#les-part-role', root), all = role.textContent;
-    list.innerHTML = [{ id: '', name: 'Вся кисть' }, ...h.PARTS].map((p) => `<button type="button" data-part="${p.id}">${p.name}</button>`).join('');
-    // Parts behind the model's middle are seen from the back, the rest from the palm side.
-    const mid = h.box.getCenter(new T.Vector3()), side = {};
-    h.PARTS.forEach((p) => { side[p.id] = new T.Box3().setFromObject(h.parts[p.id]).getCenter(new T.Vector3()).z < mid.z - 1 ? BACK : FRONT; });
-    const want = new T.Vector3(), off = new T.Vector3();
-    let turning = false;
-    if (c) c.addEventListener('start', () => { turning = false; });   // a drag wins over the automatic turn
 
     sel.apply = () => {
       const p = h.PARTS.find((x) => x.id === sel.part);
@@ -152,21 +169,13 @@
       name.textContent = p ? p.name : 'Вся кисть';
       role.textContent = p ? p.role : all;
       $$('[data-part]', list).forEach((b) => b.setAttribute('aria-pressed', b.dataset.part === (p ? p.id : '')));
-      const [az, el] = p ? side[p.id] : FRONT;
-      want.set(Math.sin(az) * Math.cos(el), Math.sin(el), Math.cos(az) * Math.cos(el));
-      turning = true;
+      turn.to((p && VIEW[p.id]) || FRONT);
     };
     sel.apply();
 
     stage.frame((dt, t) => {
       dt = Math.max(dt, 0);       // the first frame after start() can come with a negative dt
-      if (turning && c) {
-        off.copy(stage.camera.position).sub(c.target);
-        const len = off.length();
-        off.normalize().lerp(want, live ? 1 - Math.exp(-dt * 3) : 1).normalize();
-        if (off.angleTo(want) < 0.01) turning = false;
-        stage.camera.position.copy(c.target).addScaledVector(off, len);
-      }
+      turn.step(dt);
       fit.step(dt);
       h.update(dt);
       sel.tick(t);
@@ -186,21 +195,25 @@
 
   function initHand(root) {
     const sel = { part: '', apply() {}, tick() {} };
+    // Drawn now, not when the 3D stage scrolls in: by then a keyboard user has tabbed past them.
+    $('#les-parts', root).innerHTML = [{ id: '', name: 'Вся кисть' }, ...RA.createHand.PARTS]
+      .map((p) => `<button type="button" data-part="${p.id}" aria-pressed="${p.id === ''}">${p.name}</button>`).join('');
     root.addEventListener('click', (e) => {
       const b = e.target.closest('[data-part]');
       if (!b) return;
       sel.part = b.dataset.part;
       sel.apply();
     });
-    // Two equal 24-tooth gears (SPEC §1): the thumb turns as far as the motor, the other way. The view turns gear B half a tooth so they mesh.
-    const range = $('#les-gear', root), out = $('#les-gear-out', root), a = $('#les-gear-a', root), b = $('#les-gear-b', root);
-    $('#les-gear-a-path', root).setAttribute('d', gearPath(24, 41, 35));
-    $('#les-gear-b-path', root).setAttribute('d', gearPath(24, 41, 35));
+    // Two equal 24-tooth gears at a right angle (SPEC §1): 1:1, so the standing gear, the lying one and the thumb on it all turn by
+    // the motor's angle. The lying paths sit half a tooth round so a gap meets the standing gear's top tooth.
+    const range = $('#les-gear', root), out = $('#les-gear-out', root), stand = $$('[data-stand]', root), lie = $$('[data-lie]', root);
+    $$('.les-gears__wheel', root).forEach((p) => p.setAttribute('d', gearPath(24, 34, 29)));
     let touched = false;
     const turn = (deg) => {
-      a.setAttribute('transform', `rotate(${deg})`);
-      b.setAttribute('transform', `rotate(${-deg})`);
-      out.textContent = `Мотор ${Math.round(deg)}° по часовой, палец ${Math.round(deg)}° против`;
+      stand.forEach((g) => g.setAttribute('transform', `rotate(${deg})`));
+      // At the mesh the standing gear's top drags the lying gear's near edge along: in the lying gear's own plane that is rotate(-deg).
+      lie.forEach((g) => g.setAttribute('transform', `rotate(${-deg})`));
+      out.textContent = `Мотор E ${Math.round(deg)}°, большой палец ${Math.round(deg)}°`;
     };
     range.addEventListener('input', () => { touched = true; turn(+range.value); });
     // The slider moves by itself while the 3D runs, until someone takes it, so the class sees what it does.
@@ -229,7 +242,8 @@
   const RED = '#e3000b';
 
   function makeTry(root) {
-    const stage = handStage($('#les-try-stage', root), -2.1, 0.42);   // from behind the thumb's side: sensors, fingers and thumb in view
+    // From the palm and the thumb's side, above: the fingers curl towards the palm, the thumb swings in front of it, the card shows by the colour sensor.
+    const stage = handStage($('#les-try-stage', root), 1.1, 0.55);
     const h = RA.createHand(), fit = fitter(stage, h.group);
     stage.scene.add(h.group, shadowCatcher());
     // Frame the closed hand too: fingers and thumb swing out of the open hand's box.
@@ -367,8 +381,10 @@
 
   /* ---------- Build stepper ---------- */
   function makeBuild(root) {
-    const stage = handStage($('#les-build-stage', root), -0.6, 0.42);
-    const h = RA.createHand(), fit = fitter(stage, h.group);
+    // From the palm side; the cover goes on the back, so its stage turns the model round.
+    const FROM = [-0.6, 0.42], BEHIND = [BACK[0], 0.42];
+    const stage = handStage($('#les-build-stage', root), ...FROM);
+    const h = RA.createHand(), fit = fitter(stage, h.group), turn = turner(stage);
     stage.scene.add(h.group, shadowCatcher());
     const S = h.STAGES, last = S.length - 1, plays = live && !!stage.renderer;
     const rail = $('#les-rail', root), prev = $('#les-stage-prev', root), next = $('#les-stage-next', root), explode = $('#les-explode', root);
@@ -378,7 +394,7 @@
       return `<li style="flex:${n} 1 0"><button type="button" data-stage="${i}" aria-label="Этап ${i + 1}: ${s.title}, ${n > 1 ? 'шаги' : 'шаг'} ${s.steps}">${'<i></i>'.repeat(n)}</button><span>${s.steps}</span></li>`;
     }).join('');
     const items = $$('li', rail);
-    let n = 0, tween = 1;
+    let n = 0, tween = 1, aim = FROM;
 
     const show = (i, animate) => {
       n = i;
@@ -401,7 +417,13 @@
       prev.disabled = n === 0;
       next.disabled = n === last;
     };
-    const go = (i) => { explode.value = 0; h.setExplode(0); show(i, true); };
+    const go = (i) => {
+      explode.value = 0;
+      h.setExplode(0);
+      show(i, true);
+      const want = S[i].id === 'cover' ? BEHIND : FROM;
+      if (want !== aim) turn.to((aim = want));     // only when the side changes: a model someone turned stays as it is
+    };
 
     rail.addEventListener('click', (e) => { const b = e.target.closest('[data-stage]'); if (b) go(+b.dataset.stage); });
     prev.addEventListener('click', () => go(n - 1));
@@ -420,6 +442,7 @@
         tween = Math.min(1, tween + dt / 0.9);
         h.setBuildStage(n, tween);
       }
+      turn.step(dt);
       fit.step(dt);
       h.update(dt);
     });
@@ -432,8 +455,8 @@
       why: 'Три пальца обхватывают мяч с трёх сторон и сами ставят его в середину. Двумя пальцами круглое держится хуже.' },
     { q: 'Ты слегка нажал датчик силы. Что сделает кисть?', a: ['Согнёт все три пальца', 'Ничего', 'Согнёт палец C'], ok: 2,
       why: 'Подпрограмма «(D) когда нажата» отправляет мотор C в положение 270. Палец A ждёт сильного нажатия, а большой палец ждёт красную карточку.' },
-    { q: 'Мотор E повернулся на 80°. Две его шестерни одинаковые, по 24 зуба. Что с большим пальцем?', a: ['80° в ту же сторону', '80° в другую сторону', '160° в ту же сторону'], ok: 1,
-      why: 'Шестерни одинаковые, поэтому угол тот же, 1:1. А сцепленные шестерни крутятся в разные стороны.' },
+    { q: 'Мотор E повернулся на 80°. Две его шестерни одинаковые, по 24 зуба. На сколько повернётся большой палец?', a: ['На 40°', 'На 80°', 'На 160°'], ok: 1,
+      why: 'Зубьев у шестерён поровну, это передача 1:1. Поэтому палец поворачивается на столько же градусов, сколько мотор: на 80°.' },
     { q: 'Зачем на пальцы ставят резиновые накладки?', a: ['Резина даёт трение, и предмет не выскальзывает', 'Для красоты', 'Чтобы пальцы сгибались быстрее'], ok: 0,
       why: 'Резина цепляется за предмет лучше гладкого пластика. Поэтому у Роборуки на пальцах были шины.' },
     { q: 'Что сделает кисть автономнее?', a: ['Нажимать на датчик сильнее', 'Карточка побольше', 'Датчик расстояния в программе'], ok: 2,

@@ -576,7 +576,7 @@
       phases: [
         { s: 1.5, text: 'Рука над круглой деталью', x: -10, y: 17, z: 3 },
         { s: 0.9, y: 8.8 },
-        { s: 1.6, text: 'Пальцы обхватили её со всех сторон', wrap: 1, ball: 1 },
+        { s: 1.6, text: 'Пальцы обхватили её с трёх сторон', wrap: 1, ball: 1 },
         { s: 0.9, y: 17 },
         { s: 1.7, text: 'Деталь едет в ящик', x: 10.8, z: 2 },
         { s: 0.8, y: 9.2 },
@@ -594,7 +594,7 @@
       build: factory,
     },
     {
-      id: 'robonaut', bg: 'linear-gradient(#eef2f5, #cfd8df)', camera: [12, 24, 56], target: [-4, 14, -2], poster: 3.6,
+      id: 'robonaut', bg: 'linear-gradient(#eef2f5, #cfd8df)', camera: [12, 24, 56], target: [-4, 14, -2], poster: 6.4,
       start: { hx: -1, hy: 9, hz: 3, grip: 0, thumb: 0, tool: 0, air: 0 },
       phases: [
         { s: 1.7, text: 'Робонавт тянется к прибору', hx: -6, hy: 11, hz: -2.6 },
@@ -641,7 +641,7 @@
       build: printed,
     },
     {
-      id: 'ocean', bg: 'linear-gradient(#3aa5d4, #0f5288 55%, #072b4f)', camera: [14, 13, 74], target: [-3, 8, 2], poster: 7.2,
+      id: 'ocean', bg: 'linear-gradient(#3aa5d4, #0f5288 55%, #072b4f)', camera: [14, 13, 74], target: [-3, 8, 2], poster: 8,
       start: { rx: -34, ry: 20, rz: 0, hx: 5, hy: -2, hz: 3, grip: 0, vase: 0, scan: 0, feel: 0, lift: 0 },
       phases: [
         { s: 2.6, text: 'Пилот ведёт робота к затонувшему кораблю', rx: -6, ry: 11 },

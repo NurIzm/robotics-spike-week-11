@@ -1,5 +1,5 @@
-// The simulator: the hand on a table, a stand in front of its palm, and the person behind the hand (force sensor, colour cards,
-// a hand near the distance sensor) behind sim.hw, which is all the VM ever touches. The hand stands still; «Поднять кисть» tests the grip.
+// The simulator: the hand on a table, a stand in front of its palm, and the person on the palm side (force sensor, colour cards,
+// a hand in front of the distance sensor) behind sim.hw, which is all the VM ever touches. The hand stands still; «Поднять кисть» tests the grip.
 (function () {
   const RA = window.RA;
   const T = THREE;
@@ -41,13 +41,13 @@
     const dx = Math.abs(p.x - c.x) - l, dr = Math.hypot(p.y - c.y, p.z - c.z) - r;
     return Math.hypot(Math.max(dx, 0), Math.max(dr, 0)) + Math.min(Math.max(dx, dr), 0);
   };
-  // r: half-depth from the palm (h.holdAt), hy: half-height, dist: its shape. round: why two fingers lose it (SPEC §7's table):
+  // r: half-depth from the palm (h.holdAt), hy: half-height, dist: its shape, n: neuter noun ("выпало"). round: why two fingers lose it (SPEC §7's table):
   // a round thing escapes sideways between two fingers, the thumb closes that side.
   const OBJECTS = [
     { id: 'cube', name: 'Кубик', r: 1, hy: 1.2, dist: (p, c) => boxDist(p, c, 2, 1.2, 1) },
     { id: 'pencil', name: 'Карандаш', r: 0.5, hy: 0.5, dist: (p, c) => rodDist(p, c, 5, 0.5) },
     { id: 'ball', name: 'Мяч', r: 3, hy: 3, round: 'Круглый: выкатился вбок', dist: (p, c) => p.distanceTo(c) - 3 },
-    { id: 'apple', name: 'Яблоко', r: 3.5, hy: 3.2, round: 'Тяжёлое и круглое: выскользнуло', dist: (p, c) => p.distanceTo(c) - 3.5 },
+    { id: 'apple', name: 'Яблоко', n: true, r: 3.5, hy: 3.2, round: 'Тяжёлое и круглое: выскользнуло', dist: (p, c) => p.distanceTo(c) - 3.5 },
   ];
 
   function createSound(onBeep) {
@@ -201,7 +201,7 @@
       for (const x of [-1.5, -0.5, 0.5, 1.5]) for (const z of [-0.5, 0.5]) parts.push(new T.CylinderGeometry(0.3, 0.3, 0.2, 12).translate(x, 1.3, z));
       return new T.Mesh(T.BufferGeometryUtils.mergeGeometries(parts.map((g) => { const n = g.index ? g.toNonIndexed() : g; n.deleteAttribute('uv'); return n; })), plastic('#e8352e', { roughness: 0.35 }));
     },
-    // Lying across the palm: eraser on the thumb's side, the point on the other.
+    // Lying across the palm: eraser on finger A's side, the point on the thumb's.
     pencil() {
       const along = (g, x) => g.rotateZ(-Math.PI / 2).translate(x, 0, 0);
       return new T.Group().add(
@@ -224,26 +224,30 @@
 
   RA.createSim = (container) => {
     const h = RA.createHand();
-    const box = h.box, mid = box.getCenter(new T.Vector3());
-    // What the camera has to show: the hand, the biggest object on the stand and the hand lifted.
-    const frame = box.clone().expandByPoint(h.holdAt(3.5).addScalar(3.5)).expandByPoint(new T.Vector3(mid.x, box.max.y + LIFT.height, mid.z));
-    const aim = frame.getCenter(new T.Vector3());
+    // What the camera has to show: every mesh of the hand at rest and lifted, which hugs the hand far better than one box
+    // round all of it; the stand and the objects sit inside. Each corner is fitted exactly, see tick().
     const right = new T.Vector3(0, 1, 0).cross(VIEW).normalize(), up = VIEW.clone().cross(right);
-    const fit = { u: 0, v: 0, near: 0 };
-    for (let i = 0; i < 8; i++) {
-      const p = new T.Vector3(i & 1 ? frame.max.x : frame.min.x, i & 2 ? frame.max.y : frame.min.y, i & 4 ? frame.max.z : frame.min.z).sub(aim);
-      fit.u = Math.max(fit.u, Math.abs(p.dot(right)) + 2);
-      fit.v = Math.max(fit.v, Math.abs(p.dot(up)) + 2);
-      fit.near = Math.max(fit.near, p.dot(VIEW));
-    }
+    const corners = [], b = new T.Box3();
+    h.group.updateMatrixWorld(true);
+    h.group.traverseVisible((m) => {
+      if (!m.isMesh) return;
+      b.setFromObject(m);
+      for (let i = 0; i < 16; i++) corners.push(new T.Vector3(i & 1 ? b.max.x : b.min.x, (i & 2 ? b.max.y : b.min.y) + (i & 8 ? LIFT.height : 0), i & 4 ? b.max.z : b.min.z));
+    });
+    const uv = corners.map((p) => [p.dot(right), p.dot(up), p.dot(VIEW)]);
+    const span = (k) => [Math.min(...uv.map((q) => q[k])), Math.max(...uv.map((q) => q[k]))];
+    const [u0, u1] = span(0), [v0, v1] = span(1), um = (u0 + u1) / 2, vm = (v0 + v1) / 2;
+    const aim = right.clone().multiplyScalar(um).addScaledVector(up, vm).addScaledVector(VIEW, corners.reduce((s, p) => s + p.dot(VIEW), 0) / corners.length);
+    const an = aim.dot(VIEW);
+    const fit = uv.map(([u, v, n]) => [Math.abs(u - um), v - vm, n - an]);
     const stage = RA.stage(container, { fov: FOV, target: aim.toArray(), camera: aim.clone().addScaledVector(VIEW, 120).toArray(), shadowBox: 40 });
     const { scene, camera } = stage;
-    const half = Math.ceil(Math.max(-frame.min.x, frame.max.x, -frame.min.z, frame.max.z) / 8 + 2) * 8;
+    const half = Math.ceil(Math.max(...corners.map((p) => Math.max(Math.abs(p.x), Math.abs(p.z)))) / 8 + 2) * 8;
     scene.add(h.group, tableMesh(half));
 
     // The stand: a post, a plate and a foot, the post as tall as the object on it needs.
     const standMat = plastic('#c3ccd2', { roughness: 0.55 });
-    const post = new T.Mesh(new T.CylinderGeometry(0.45, 0.6, 1, 16).translate(0, 0.5, 0), standMat);
+    const post = new T.Mesh(new T.CylinderGeometry(0.45, 0.45, 1, 16).translate(0, 0.5, 0), standMat);
     const plate = new T.Mesh(new T.CylinderGeometry(1, 1, 0.3, 24).translate(0, -0.15, 0), standMat);
     const foot = new T.Mesh(new T.CylinderGeometry(1.8, 2, 0.4, 24).translate(0, 0.2, 0), standMat);
     const stand = shadowed(new T.Group().add(post, plate, foot));
@@ -365,6 +369,8 @@
     const fitStand = (o) => {
       const c = o.c || h.holdAt(o.r);
       stand.position.set(c.x, 0, c.z);
+      // The stand rises through both frames' openings, which end 4.5 in front of the middle: the foot slides back to stay inside.
+      foot.position.z = Math.min(0, 4.45 - 2 - c.z);
       post.scale.y = Math.max(0.01, c.y - o.hy - 0.3);
       plate.position.y = c.y - o.hy;
       const k = clamp(o.r * 0.8, 0.5, 1.6);
@@ -393,9 +399,10 @@
 
     // Why the object is not held, or null when it is: both fingers have to grip, a round object needs the thumb too.
     const verdict = (g) => {
-      if (!g.A && !g.C && !g.E) return { stays: true, text: 'Пальцы его не сжали: остался на подставке' };
+      const fell = obj.n ? 'выпало' : 'выпал';
+      if (!g.A && !g.C && !g.E) return { stays: true, text: `Пальцы его не сжали: ${obj.n ? 'осталось' : 'остался'} на подставке` };
       const miss = ['A', 'C'].filter((p) => !g[p]);
-      if (miss.length) return { text: miss.length === 2 ? 'Пальцы A и C не сжали его: выпал' : `Палец ${miss[0]} не сжал его: выпал` };
+      if (miss.length) return { text: miss.length === 2 ? `Пальцы A и C не сжали его: ${fell}` : `Палец ${miss[0]} не сжал его: ${fell}` };
       if (obj.round && !g.E) return { text: obj.round };
       return null;
     };
@@ -406,7 +413,8 @@
       lift.told = true;
       emit({ type: 'held', obj, kind: lift.kind, held, text });
     };
-    // From where it is in the lifted hand; a round one rolls out sideways, away from the thumb.
+    // From where it is in the lifted hand; a round one rolls out sideways, on the thumb's side that two fingers leave open.
+    // shortcut: a falling object passes through the frames under it; give it a roll forward first if that ever bothers anyone.
     const drop = (text) => {
       const c = obj.c.clone().add(offset);
       Object.assign(obj, { state: 'fall', x: c.x, y: c.y, z: c.z, vx: obj.round ? ROLL : 0, vy: 0 });
@@ -431,7 +439,7 @@
       if (obj && obj.state === 'held') {
         // A weak grip lasts until the shake; a good one until the fingers let go.
         if (lift.slip && t >= up) drop(lift.slip);
-        else if (!lift.slip && verdict(grips())) drop('Пальцы разжались: выпал');
+        else if (!lift.slip && verdict(grips())) drop(`Пальцы разжались: ${obj.n ? 'выпало' : 'выпал'}`);
         else if (t >= LIFT_TOP && !lift.told) report(true, '');
       }
       if (t < LIFT_TOP + down) return;
@@ -562,7 +570,7 @@
       proxy.visible = dist !== null;
       if (dist !== null) {
         proxy.position.copy(eye).addScaledVector(look, dist * CM + 0.8);
-        proxy.position.y = Math.max(proxy.position.y, 3.2);
+        proxy.position.y = Math.max(proxy.position.y, 5.1);        // close up it would dip into the base's front beam (Y 1..2)
         proxy.lookAt(eye.x, proxy.position.y, eye.z);
       }
       emit({ type: 'distance', cm: dist });
@@ -596,8 +604,16 @@
       if (sim.onTick) sim.onTick();
       if (stage.size !== seen && stage.controls) {
         seen = stage.size;
-        const tan = Math.tan((camera.fov * Math.PI) / 360), d = Math.max(fit.v, fit.u / camera.aspect) / tan + fit.near;
-        camera.position.sub(stage.target).setLength(d).add(stage.target);
+        // The nearest camera that shows every corner at its own depth with a module to spare, the object chips' 56 px kept clear
+        // at the top and 16 px at the bottom. need(s) is that distance with the aim raised by s; it is convex, so a ternary search finds the best s.
+        const tan = Math.tan((camera.fov * Math.PI) / 360), top = tan * Math.max(0.5, 1 - 112 / seen.h), low = tan * (1 - 32 / seen.h), wide = tan * camera.aspect;
+        const need = (s) => Math.max(...fit.map(([u, v, n]) => n + Math.max((v - s + 1) / top, (s - v + 1) / low, (u + 1) / wide)));
+        let s0 = -12, s1 = 12;
+        for (let i = 0; i < 40; i++) { const a = s0 + (s1 - s0) / 3, z = s1 - (s1 - s0) / 3; if (need(a) < need(z)) s1 = z; else s0 = a; }
+        const s = (s0 + s1) / 2, d = need(s), dir = camera.position.clone().sub(stage.target).normalize();
+        stage.target.copy(aim).addScaledVector(up, s);
+        stage.controls.target.copy(stage.target);
+        camera.position.copy(stage.target).addScaledVector(dir, d);
         stage.controls.minDistance = d * 0.4;
         stage.controls.maxDistance = d * 1.6;
       }
@@ -610,6 +626,7 @@
     const el = stage.renderer && stage.renderer.domElement;
     if (el) {
       const ray = new T.Raycaster(), ndc = new T.Vector2();
+      h.forceButton.geometry.computeBoundingBox();
       const shown = (o) => { for (; o; o = o.parent) if (!o.visible) return false; return true; };
       const within = (o, root) => { for (; o; o = o.parent) if (o === root) return true; return false; };
       let pressed = null, plunger = false;
@@ -627,13 +644,17 @@
         ndc.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
         ray.setFromCamera(ndc, camera);
         // Raycasting sees hidden meshes too (the card when none is shown): the first visible hit counts.
-        const hit = ray.intersectObject(h.group, true).find((x) => shown(x.object));
+        const hits = ray.intersectObject(h.group, true).filter((x) => shown(x.object)), hit = hits[0];
         if (!hit) return;
         const o = hit.object, b = h.hubButtons;
+        // The plunger is small and the colour sensor hides much of it from the front-right: the force sensor's face round it
+        // counts too, and so does the plunger just behind whatever the pointer hit first.
+        const cap = h.forceButton.geometry.boundingBox.getCenter(v3).applyMatrix4(h.forceButton.matrixWorld);
+        const onForce = (within(o, h.parts.controls) && hit.point.distanceTo(cap) < 2.3) || hits.some((x) => x.object === h.forceButton && x.distance - hit.distance < 5);
         if (within(o, b.center)) emit({ type: 'center' });
         else if (within(o, b.left)) press((pressed = 'left'), true);
         else if (within(o, b.right)) press((pressed = 'right'), true);
-        else if (within(o, h.forceButton)) { plunger = true; setForce(4); }
+        else if (onForce) { plunger = true; setForce(4); }
         else return;
         stage.controls.enabled = false;
         el.setPointerCapture(e.pointerId);

@@ -143,7 +143,7 @@
 .ports__sensors div { display: flex; align-items: baseline; gap: 6px; }
 .ports__sensors dt { font-weight: 800; }
 .ports__sensors dd { margin: 0; white-space: nowrap; }
-/* The person behind the hand: a card for the colour sensor, a hand for the distance sensor. */
+/* The person on the palm side: a card for the colour sensor, a hand for the distance sensor. */
 .person { grid-area: person; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px; }
 .cards { display: flex; gap: 4px; }
 .cards button {
@@ -164,6 +164,7 @@
 }
 @container tasks (max-width: 460px) {
   .tasks__tab { height: auto; min-height: 32px; font-size: 12px; padding: 3px 4px; gap: 4px; }
+  .tasks__name { overflow-wrap: anywhere; hyphens: auto; }   /* «программу» is wider than an 85px tab */
   .tasks__pin { width: 14px; height: 14px; }
 }
 @container right (max-width: 500px) {

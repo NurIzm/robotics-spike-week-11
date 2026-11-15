@@ -6,16 +6,20 @@
   const TASKS = [
     { title: 'Допиши программу', xml: () => RA.SOLUTION_XML, ready: 'Нажми запуск. Покажи красную карточку (клавиша 1), подожди, потом убери её (клавиша 0).',
       goal: 'Это программа автора модели. Красная карточка сгибает большой палец, а назад он не разгибается: в последнем стеке нет блока. Добавь его.',
-      hint: 'Последний стек: «(F) когда цвет» с перечёркнутым кружком, это «нет цвета». Поставь под него блок из «Моторов»: E перейти самым коротким путём в положение 0.' },
+      stacks: ['flipperevents_whenColor'],
+      hint: 'Последний стек в левом столбце: «(F) когда цвет» с перечёркнутым кружком, это «нет цвета». Поставь под него блок из «Моторов»: E перейти самым коротким путём в положение 0.' },
     { title: 'Два или три пальца', xml: () => RA.SOLUTION_XML, ready: 'Запусти программу из первого задания и выбери предмет на подставке.',
       goal: 'Подними каждый предмет двумя пальцами и тремя. Два пальца: сильно нажми датчик силы. Три: ещё и покажи красную карточку. Таблица заполнится сама.',
-      hint: 'Зажми Shift и пробел (9 Н), для трёх пальцев ещё нажми 1. Пока пальцы сжаты, нажми стрелку вверх. Мышью: включи «Держать», нажми низ датчика, потом «Поднять кисть».' },
+      stacks: ['flipperevents_whenPressed'],
+      hint: 'Какие пальцы сгибает нажатие, видно в правом столбце: стеки «(D) когда…». Зажми Shift и пробел (9 Н), для трёх пальцев ещё нажми 1. Пока пальцы сжаты, нажми стрелку вверх. Мышью: включи «Держать», нажми низ датчика, потом «Поднять кисть».' },
     { title: 'Три пальца одной кнопкой', xml: () => RA.ONEPRESS_XML, ready: 'Запусти программу и сильно нажми датчик силы (Shift и пробел). Карточку не показывай.',
       goal: 'Улучши программу: сильное нажатие пусть сгибает и большой палец, а когда датчик отпустили, разгибаются все три. Без карточки.',
-      hint: 'В стек «(D) когда сильно нажата» добавь «E перейти самым коротким путём в положение 80», а в стек «(D) когда отпущена» добавь «E … в положение 0».' },
+      stacks: ['flipperevents_whenPressed'],
+      hint: 'Стеки датчика силы в правом столбце. В стек «(D) когда сильно нажата» добавь «E перейти самым коротким путём в положение 80», а в стек «(D) когда отпущена» добавь «E … в положение 0».' },
     { title: 'Передай предмет', xml: () => RA.HANDOVER_XML, ready: 'Запусти программу. Датчик силы не нажимай, карточки не показывай. Потом поднеси руку к датчику расстояния.',
       goal: 'Робот сам отдаёт предмет человеку. После запуска кисть сжимает все три пальца. Когда рука человека ближе 10 см к датчику расстояния, кисть сама разжимается.',
-      hint: 'В стеке «когда запускается подпрограмма»: A в положение 90, C в 270, E в 80, потом «ждать до (B) — ближе 10 см?» из «Датчиков», потом A, C и E в положение 0.' },
+      stacks: ['flipperevents_whenProgramStarts'],
+      hint: 'Стек «когда запускается подпрограмма» слева вверху. В нём: A в положение 90, C в 270, E в 80, потом «ждать до (B) — ближе 10 см?» из «Датчиков» (выбери см), потом A, C и E в положение 0.' },
   ];
   const ROWS = [[2, 'Два пальца'], [3, 'Три пальца']];
   const PORTS = ['A', 'C', 'E'];
@@ -83,6 +87,18 @@
     say(TASKS[task].ready);
   };
 
+  // Brings the stacks a task works with into view: their column at the left edge, from the top of the program down as far as
+  // their last block and room for one more under it (the tools and the run buttons cover the bottom 90 px).
+  const reveal = () => {
+    const ws = bl.workspace, tops = ws.getTopBlocks(false).filter((b) => TASKS[task].stacks.includes(b.type));
+    if (!tops.length) return;
+    const m = ws.getMetrics(), s = ws.scale, at = tops.map((b) => b.getRelativeToSurfaceXY());
+    const x0 = Math.min(...at.map((p) => p.x)), y0 = Math.min(...at.map((p) => p.y));
+    const y1 = Math.max(...tops.map((b, i) => at[i].y + b.getHeightWidth().height));
+    const top = Math.max(0, Math.min((y1 + 60) * s + 90 - m.viewHeight, (y0 - 30) * s));
+    ws.scrollbar.set((x0 - 48) * s - m.contentLeft, top - m.contentTop);
+  };
+
   const select = (i) => {
     task = i;
     RA.store.set('program.task', i);
@@ -96,6 +112,7 @@
     vm.stop();
     sim.resetTable();
     newRound();
+    reveal();
   };
 
   const code = () => (sim.card ? sim.card.code : -1);
@@ -183,7 +200,7 @@
       show(`#read-${p}-power`, m.powerPct);
     });
     const check = WATCH[task];
-    if (vm.running && check) check();
+    if (vm.running && check && !watch.bent) check();
   };
 
   const paintForce = (n) => {
@@ -209,10 +226,16 @@
   };
   const startStop = () => { if (vm.running) vm.stop(); else play(); };
 
-  // Every check watches one run from its start.
+  // Every check watches one run from its start. Tasks 3 and 4 need open fingers then: ones still bent by an earlier run would
+  // pass a program that never bends them.
   const onRun = (running) => {
     root.classList.toggle('is-running', running);
-    if (running) watch = { step: 0, at: sim.time, far: true };
+    // A program that ends once the fingers are closed would leave the student waiting at «поднеси руку». Status only, no toast:
+    // a Stop, a reset or another task land here too, and the last two put their own text in at once.
+    if (!running && task === 3 && watch.step === 1) say('Программа остановилась, а пальцы сжаты. Она должна ждать руку: «ждать до (B) — ближе 10 см?», потом A, C и E в положение 0.', 'warn');
+    if (!running) return;
+    watch = { step: 0, at: sim.time, far: true, bent: task >= 2 && !allOpen() };
+    if (watch.bent) warn('Пальцы ещё согнуты с прошлого запуска. Нажми «Сбросить стол» и запусти программу снова.');
   };
 
   // Pressing while nothing runs: say so once, not on every press.
@@ -328,6 +351,7 @@
         if (!ok) return;
         vm.stop();
         bl.load(xml);
+        reveal();
         say('Решение загружено. Нажми запуск и проверь.');
       });
     };
@@ -337,9 +361,9 @@
       newRound();
     };
     $('#task-restart').onclick = () => {
-      Blockly.confirm('Начать заново? Вернётся стартовая программа, отметки заданий, таблица испытаний и результат теста сотрутся.', (ok) => {
+      Blockly.confirm('Начать заново? Вернётся стартовая программа. Отметки заданий, таблица испытаний, паспорт захвата и результат теста сотрутся.', (ok) => {
         if (!ok) return;
-        RA.store.remove(['done', 'program.tasks', 'program.xml', 'program.task', 'program.results', 'lessonQuiz', 'examples.seen']);
+        RA.store.remove(['done', 'program.tasks', 'program.xml', 'program.task', 'program.results', 'lessonQuiz', 'lessonDesign', 'examples.seen']);
         location.reload();
       });
     };
@@ -438,6 +462,7 @@
       ws.setScale(Math.max(0.5, Math.min(0.8, all >= 0.55 ? all : fit(tops.filter((b) => b.getRelativeToSurfaceXY().x < x0 + 200)))));
       const at = ws.getMetrics();
       ws.scrollbar.set(-at.contentLeft, -at.contentTop);       // a new scale moves the blocks: put the origin back in the corner, as load() does
+      reveal();
       RA.program = { sim, bl, vm, select, get results() { return results; }, get task() { return task; }, get watch() { return watch; } };   // QA and the console reach the live objects here
     },
     enter() {

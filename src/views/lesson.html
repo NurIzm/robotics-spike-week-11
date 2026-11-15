@@ -41,7 +41,7 @@
     <path d="M214 116h60l14 10h44l8 8-8 6h-48l-14-10h-56z" fill="#16151a" opacity="0.72"/>
     <circle cx="244" cy="112" r="4" fill="#fed920"/>
   </symbol>
-  <!-- Today's Кисть from the palm side: frames, hub, palm, two fingers of paired black liftarms, the yellow thumb on the left. -->
+  <!-- Today's Кисть from the back, as on the PDF cover: frames, hub screen, the cover, two fingers of paired black liftarms, the yellow thumb on the left. -->
   <symbol id="les-pic-hand" viewBox="4 2 172 196">
     <rect x="44" y="186" width="124" height="10" rx="4" fill="#7fd3e6" stroke="#10202a" stroke-width="2"/>
     <rect x="58" y="140" width="96" height="46" rx="5" fill="#eceded" stroke="#10202a" stroke-width="2"/>
@@ -126,7 +126,7 @@
       </dl>
     </article>
   </div>
-  <p class="les-was__sum"><b>Улучшить модель</b> — значит найти, что у неё получается плохо, и переделать именно это. У Роборуки и у захватов всё сжималось вместе, от одного мотора. У кисти каждый палец двигается сам.</p>
+  <p class="les-was__sum"><b>Улучшить модель</b> — значит найти, что у неё получается плохо, и переделать именно это. У Роборуки и у Захватов всё сжималось вместе, от одного мотора. У кисти каждый палец двигается сам.</p>
 </section>
 
 <section class="les-sec les-fing" id="les-fing" aria-labelledby="les-fing-title">
@@ -177,7 +177,7 @@
 <section class="les-sec les-hand" id="les-hand" aria-labelledby="les-hand-title">
   <div>
     <h2 id="les-hand-title">Наша кисть</h2>
-    <p class="les-lead">Нажми на часть: она останется яркой, а всё остальное станет прозрачным. Модель можно вращать.</p>
+    <p class="les-lead">Нажми на часть: она останется яркой, а всё остальное побледнеет. Модель можно вращать.</p>
   </div>
   <div class="les-hand__bench">
     <div class="les-hand__stage" id="les-hand-stage" role="img" aria-label="Трёхмерная модель кисти. Её можно вращать."></div>
@@ -196,7 +196,7 @@
         <thead><tr><th scope="col">Порт</th><th scope="col">Что подключено</th><th scope="col">Зачем</th></tr></thead>
         <tbody>
           <tr><th scope="row"><button type="button" class="les-port" data-part="fingerA" aria-label="Порт A: показать палец A">A</button></th><td>Средний мотор</td><td>Палец A</td></tr>
-          <tr><th scope="row"><button type="button" class="les-port" data-part="distance" aria-label="Порт B: показать датчик расстояния">B</button></th><td>Датчик расстояния</td><td>Смотрит назад. Программа автора его не использует</td></tr>
+          <tr><th scope="row"><button type="button" class="les-port" data-part="distance" aria-label="Порт B: показать датчик расстояния">B</button></th><td>Датчик расстояния</td><td>Смотрит из ладони. Программа автора его не использует</td></tr>
           <tr><th scope="row"><button type="button" class="les-port" data-part="fingerC" aria-label="Порт C: показать палец C">C</button></th><td>Средний мотор</td><td>Палец C, рядом с большим</td></tr>
           <tr><th scope="row"><button type="button" class="les-port" data-part="controls" aria-label="Порт D: показать датчики силы и цвета">D</button></th><td>Датчик силы</td><td>Кнопка: сгибает пальцы A и C</td></tr>
           <tr><th scope="row"><button type="button" class="les-port" data-part="thumb" aria-label="Порт E: показать большой палец">E</button></th><td>Большой мотор</td><td>Большой палец, через две шестерни</td></tr>
@@ -216,13 +216,23 @@
       <figcaption><b>Как двигается палец.</b> Весь палец поворачивается на оси своего мотора. Суставов внутри пальца нет: он жёсткий.</figcaption>
     </figure>
     <figure class="les-gears">
+      <!-- An oblique view, depth going up and right (pages 34–36): one gear stands on the motor's output, the other lies on the motor's
+           top and carries the thumb. Lying things go through matrix(1 0 -.42 .42 …): their "towards us" axis runs down and left. -->
       <svg viewBox="0 0 280 200" aria-hidden="true">
-        <g transform="translate(88 112)"><g id="les-gear-a"><path class="les-gears__wheel" id="les-gear-a-path"/><circle class="les-gears__hub" r="12"/><path class="les-gears__mark" d="M0-12v-18"/></g></g>
-        <g transform="translate(165 112)"><g id="les-gear-b"><path class="les-gears__wheel" id="les-gear-b-path" transform="rotate(3.75)"/><path class="les-gears__thumb les-gears__thumb--edge" d="M0 0V-70h-26"/><path class="les-gears__thumb" d="M0 0V-70h-26"/><circle class="les-gears__hub" r="12"/></g></g>
-        <text class="les-gears__lbl" x="62" y="190">мотор E</text>
-        <text class="les-gears__lbl" x="206" y="190">большой палец</text>
+        <path class="les-gears__motor les-gears__motor--top" d="M40 96h88l34-34H74z"/>
+        <path class="les-gears__motor les-gears__motor--side" d="M128 96l34-34v70l-34 34z"/>
+        <path class="les-gears__motor" d="M40 96h88v70H40z"/>
+        <g transform="translate(85.7 126.3)"><g data-stand><path class="les-gears__wheel les-gears__wheel--side"/></g></g>
+        <g transform="translate(84 128)"><g data-stand><path class="les-gears__wheel"/><circle class="les-gears__hub" r="9"/><path class="les-gears__mark" d="M0-9v-17"/></g></g>
+        <g transform="matrix(1 0 -.42 .42 97.4 85.6)"><g data-lie><path class="les-gears__wheel les-gears__wheel--side" transform="rotate(7.5)"/></g></g>
+        <g transform="matrix(1 0 -.42 .42 97.4 80.6)"><g data-lie><path class="les-gears__wheel" transform="rotate(7.5)"/><path class="les-gears__mark" d="M0 12v17"/></g></g>
+        <path class="les-gears__axle" d="M97.4 80.6V68.6"/>
+        <g transform="matrix(1 0 -.42 .42 97.4 74)"><circle class="les-gears__pin" r="11"/></g>
+        <g transform="matrix(1 0 -.42 .42 97.4 68.6)"><g data-lie><path class="les-gears__thumb les-gears__thumb--edge" d="M0 0H88"/><path class="les-gears__thumb" d="M0 0H88"/></g></g>
+        <text class="les-gears__lbl" x="84" y="192">мотор E</text>
+        <text class="les-gears__lbl" x="222" y="104">большой<tspan x="222" dy="18">палец</tspan></text>
       </svg>
-      <figcaption><b>Шестерни большого пальца.</b> Две одинаковые шестерни по 24 зуба: палец поворачивается на столько же градусов, сколько мотор, но в другую сторону.</figcaption>
+      <figcaption><b>Шестерни большого пальца.</b> Две одинаковые шестерни по 24 зуба сцеплены под прямым углом: одна стоит на оси мотора, другая лежит на моторе сверху. Так вращение передаётся за угол. Зубьев поровну, 1:1, поэтому палец поворачивается на столько же градусов, сколько мотор.</figcaption>
       <label class="les-range">Поверни мотор E<input type="range" id="les-gear" min="0" max="80" value="0"></label>
       <p class="les-gears__out" id="les-gear-out"></p>
     </figure>
@@ -295,7 +305,7 @@
       </div>
     </div>
     <div class="les-try" id="les-try">
-      <div class="les-try__stage" id="les-try-stage" role="img" aria-label="Трёхмерная модель кисти, вид со стороны оператора. Её можно вращать."></div>
+      <div class="les-try__stage" id="les-try-stage" role="img" aria-label="Трёхмерная модель кисти, вид со стороны ладони и большого пальца. Её можно вращать."></div>
       <div class="les-try__panel">
         <p class="les-try__lbl">Датчик силы D</p>
         <div class="les-switch les-switch--3" role="group" aria-label="Датчик силы D">
@@ -306,7 +316,7 @@
         <p class="les-try__lbl">Датчик цвета F</p>
         <button type="button" class="les-card" id="les-card" aria-pressed="false"><i></i>Красная карточка</button>
         <p class="les-try__read"><span>A <output id="les-pos-A">0</output>°</span><span>C <output id="les-pos-C">0</output>°</span><span>E <output id="les-pos-E">0</output>°</span></p>
-        <p class="les-try__hint">Попробуй: нажми слегка, потом сильно, потом отпусти. Оператор стоит сзади кисти: там датчики силы и цвета.</p>
+        <p class="les-try__hint">Попробуй: нажми слегка, потом сильно, потом отпусти. Датчики силы и цвета стоят со стороны ладони, там и работает человек.</p>
       </div>
     </div>
   </div>
@@ -382,7 +392,7 @@
 <section class="les-sec les-build" id="les-build" aria-labelledby="les-build-title">
   <div>
     <h2 id="les-build-title">Сборка и разборка</h2>
-    <p class="les-lead">Инструкция — PDF-файл у учителя: «робо рука 3 моторами и 3 датчиками». В приложении SPIKE этой модели нет. В инструкции 21 основной шаг. Пальцы, большой палец, рамку с датчиками и ладонь собирают отдельно, а потом ставят на место.</p>
+    <p class="les-lead">Инструкция — PDF-файл у учителя: «робо рука 3 моторами и 3 датчиками». В приложении SPIKE этой модели нет. В инструкции 21 основной шаг. Пальцы, большой палец, рамку с датчиками и накладку собирают отдельно, а потом ставят на место.</p>
     <p class="les-credit">Модель SPIKE Manipulator, автор Irwin Wu</p>
   </div>
   <div class="les-build__bench">
@@ -393,14 +403,14 @@
       <p id="les-stage-text"></p>
       <p class="les-build__parts"><b>Детали</b> <span id="les-stage-parts"></span></p>
       <div class="les-build__nav">
-        <button type="button" class="btn" id="les-stage-prev">Назад</button>
+        <button type="button" class="btn" id="les-stage-prev" disabled>Назад</button>
         <button type="button" class="btn btn--primary" id="les-stage-next">Дальше</button>
       </div>
     </div>
   </div>
   <ol class="les-rail" id="les-rail" aria-label="Этапы сборки, одно отверстие на шаг инструкции"></ol>
   <div class="les-build__how">
-    <p><b>Работаем в парах.</b> Ученик А собирает основу: основание, хаб, датчик расстояния и верхнюю раму. Ученик Б собирает отдельные блоки: пальцы, большой палец, рамку с датчиками и ладонь. Потом вместе ставите блоки на основу по шагам инструкции.</p>
+    <p><b>Работаем в парах.</b> Ученик А собирает основу: основание, хаб, датчик расстояния и верхнюю раму. Ученик Б собирает отдельные блоки: пальцы, большой палец, рамку с датчиками и накладку. Потом вместе ставят блоки на основу по шагам инструкции.</p>
     <p class="les-ports"><span>Палец A <b>A</b></span><span>Палец C <b>C</b></span><span>Большой палец <b>E</b></span><span>Расстояние <b>B</b></span><span>Сила <b>D</b></span><span>Цвет <b>F</b></span></p>
   </div>
   <div class="les-build__take">
@@ -432,7 +442,7 @@
       <svg class="les-ladder__pic" viewBox="0 0 172 196" aria-hidden="true"><use href="#les-pic-hand"/></svg>
       <h3>Автономия</h3>
       <p class="les-ladder__who">Решает машина</p>
-      <p><b>Неделя 11, датчики цвета и расстояния.</b> Машина сама замечает карточку или руку и сама решает, когда сжать и когда разжать.</p>
+      <p><b>Неделя 11, датчики цвета и расстояния.</b> Машина сама замечает руку или предмет и сама решает, когда сжать и когда разжать.</p>
       <p class="les-ladder__next">Сейчас у кисти решает человек: он жмёт кнопку и показывает карточку. С датчиком расстояния решать будет сама кисть.</p>
     </li>
   </ol>

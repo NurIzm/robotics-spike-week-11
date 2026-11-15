@@ -605,7 +605,7 @@
   check('deleting a running stack ends it quietly', !errors.length && seen('clear').length === left && !vm.running, `${errors} ${left} ${seen('clear').length}`);
   vm.stop();
 
-  RA.$('#sum').textContent = bad ? `FAIL: ${bad} из ${good + bad}` : `PASS: все ${good} проверок`;
+  RA.$('#sum').textContent = bad ? `FAIL: ${bad} из ${good + bad}` : `PASS: ${good} из ${good}`;
   document.title = bad ? 'FAIL' : 'PASS';
   console.log(RA.$('#sum').textContent);
 })().catch((e) => {

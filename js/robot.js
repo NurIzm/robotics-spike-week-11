@@ -15,13 +15,13 @@
 
   const PARTS = [
     { id: 'base', name: 'Основание', role: 'Две голубые рамы 11 × 15 и балки: на них стоит вся кисть' },
-    { id: 'hub', name: 'Хаб', role: 'Мозг: хранит программу, читает три датчика и управляет тремя моторами' },
+    { id: 'hub', name: 'Хаб', role: 'Мозг: хранит программу, читает три датчика и управляет тремя моторами. С тыльной стороны над ним голубая накладка' },
     { id: 'fingerA', name: 'Палец A', role: 'Свой средний мотор, порт A. Сгибается при сильном нажатии' },
     { id: 'fingerC', name: 'Палец C', role: 'Свой средний мотор, порт C. Сгибается при лёгком нажатии' },
     { id: 'thumb', name: 'Большой палец', role: 'Большой мотор и две шестерни, порт E. Сгибается от красной карточки' },
     { id: 'distance', name: 'Датчик расстояния', role: 'Смотрит туда же, куда сгибаются пальцы: видит, далеко ли рука или предмет. Порт B' },
-    { id: 'controls', name: 'Датчики силы и цвета', role: 'Кнопка силы в порту D и датчик цвета в порту F: ими управляет человек' },
-    { id: 'palm', name: 'Ладонь', role: 'Балки перед моторами пальцев: к ним пальцы прижимают предмет. Сзади ладонь закрыта голубой накладкой' },
+    { id: 'controls', name: 'Датчики силы и цвета', role: 'Датчик силы в порту D и датчик цвета в порту F: ими управляет человек' },
+    { id: 'palm', name: 'Ладонь', role: 'Балки перед моторами пальцев: к ним пальцы прижимают предмет' },
     { id: 'cables', name: 'Кабели', role: 'Нервы: шесть кабелей от моторов и датчиков к хабу' },
   ];
 
@@ -66,7 +66,7 @@
   const THUMB_LINE = [[0, 0], [6, 0], [7.41, 1.41], [7.41, 3.41]];
   const TRAVEL = 1;                          // the force sensor's plunger travels 8 mm
   const FORCE = new T.Vector3(3.5, 5.5, 6);  // the force sensor's face, plunger towards +Z through the magenta frame
-  const COLOR = new T.Vector3(8.5, 8.5, 8);  // the colour sensor's lens, looking out to +X
+  const COLOR = new T.Vector3(8.5, 8.5, 4);  // the colour sensor's lens, looking out to +X; the body sits behind the magenta beam (page 43)
   const EYES = new T.Vector3(-5.5, 4.5, 1);  // the distance sensor's face, between the eyes, looking towards +Z
   const EXPLODE = { base: [0, 0, 0], hub: [0, 0, -7], fingerA: [-4, 7, 0], fingerC: [4, 7, 0], thumb: [8, 4, 0],
     distance: [-7, 0, 5], controls: [5, 0, 8], palm: [0, 5, 0], cables: [0, 0, 0] };
@@ -355,10 +355,10 @@
     });
 
     /* ---------- Distance sensor: white face with two eyes, black back; standing, eyes one above the other ---------- */
-    // Built lying along x with the face to +z, then stood up at EYES.
-    const EYE_X = 1.6;
+    // Built lying along x with the face to +z, then stood up at EYES as on page 13: its left end (the L-beam's) on top.
+    const EYE_X = 1.6, STAND = compose(EYES.x, EYES.y, EYES.z, 0, 0, -Q);
     const distance = piece('distance', 2, [0, 6, 4], (add0) => {
-      const add = under(add0, compose(EYES.x, EYES.y, EYES.z, 0, 0, Q));
+      const add = under(add0, STAND);
       add(M.black, box(7, 3, 1.2, 0.3, 2), 0, 0, -1.4);
       add(M.white, box(7, 3, 1, 0.3, 2), 0, 0, -0.5);
       for (const x of [-EYE_X, EYE_X]) {
@@ -366,11 +366,12 @@
         add(M.dark, disc(0.72, 24), x, 0, 0.003);
         add(M.greyHole, ring(0.2, 0.6, 20), x, 0, 0.006);
       }
-      add(M.dark, brick(1.1, 0.5, 0.02), 0, -0.9, 0.003);              // the badge between the eyes
+      add(M.black, brick(1.2, 1.6, 0.02), 0, 0, 0.003);                // the black face joins the eyes
       for (const x of [-3.5, 3.5]) for (const y of [-1, 1]) dimple(add, M.dark, M.blackHole, x, y, -1.4, x > 0 ? '+x' : '-x');
     });
-    const eyeArcs = [-EYE_X, EYE_X].flatMap((x) => [Q / 2, Q / 2 + Math.PI].map((a) => ring(1.06, 1.26, 10, a, Math.PI * 0.55).translate(x, 0, 0.008)
-      .applyMatrix4(compose(EYES.x, EYES.y, EYES.z, 0, 0, Q))));
+    // The VM's order, in the sensor's own frame: upper-left, upper-right, lower-left, lower-right as you look at its eyes.
+    const eyeArcs = [Q / 2, Q / 2 + Math.PI].flatMap((a) => [-EYE_X, EYE_X].map((x) => ring(1.06, 1.26, 10, a, Math.PI * 0.55).translate(x, 0, 0.008)
+      .applyMatrix4(STAND)));
 
     /* ---------- Fingers: one motor each, the whole finger turns on its rotor ---------- */
     // Standing, head up, the rotor's axis on ROTOR: finger A's rotor faces -X, finger C's is the same motor turned round.
@@ -486,8 +487,9 @@
       cable('cableC', 3, 'C', [[FX.C, 11, ROTOR.z], [1.5, 10.1, -4.4]], true),
       cable('cableE', 4, 'E', [[9.3, 6.4, 0], [9.2, 6.6, -1.3], [8, 9.6, -2.6], [5.5, 9.75, -4], [3.5, 9.8, -4.5]], true),
       cable('cableB', 2, 'B', [[EYES.x + 0.5, 1.6, EYES.z - 2], [-4, 1.2, -2.6], [-2.6, 1.2, -3.6]], false),
-      cable('cableD', 5, 'D', [[FORCE.x, FORCE.y - 1, FORCE.z - 4.8], [2.5, 1.3, 0], [0.8, 1.2, -2.6]], false),
-      cable('cableF', 5, 'F', [[COLOR.x - 2.8, COLOR.y, COLOR.z], [7.5, 4, 6.5], [4.5, 1.3, 3], [2.6, 1.2, -2.6]], false),
+      // D and F pass beside the grey connector on the bottom frame and behind the magenta frame, to the hub's underside.
+      cable('cableD', 5, 'D', [[FORCE.x, FORCE.y - 1, FORCE.z - 4.8], [3, 1.3, 0], [2.8, 1.25, -2.4]], false),
+      cable('cableF', 5, 'F', [[COLOR.x - 2.8, COLOR.y, COLOR.z], [5.6, 4, 3.7], [4.6, 1.3, 2.2], [3.9, 1.25, -2.6]], false),
     ];
 
     /* ---------- Per-instance hub parts share these ---------- */
@@ -550,7 +552,7 @@
     const distGroup = put(K.distance, parts.distance);
     const ctrlGroup = put(K.controls, parts.controls);
     put(K.palm, parts.palm);
-    put(K.cover, parts.palm);
+    put(K.cover, parts.hub);      // the cover is the back of the hand: it lights up with the hub, not with the palm
     K.cables.forEach((c) => put(c, parts.cables).traverse((o) => { o.receiveShadow = false; }));   // a ribbon this thin only collects shadow acne
 
     const pivots = {};
@@ -668,4 +670,5 @@
       },
     };
   };
+  RA.createHand.PARTS = PARTS;   // the lesson draws the part buttons before any hand is built
 })();
