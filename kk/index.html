@@ -14,9 +14,8 @@
 <link rel="stylesheet" href="../css/blocks.css">
 <link rel="stylesheet" href="../css/program.css">
 <style>.les-opt.is-right::after { content: "Дұрыс"; } .les-opt.is-wrong::after { content: "Сенің жауабың"; }
-/* Kazakh words run longer: on a phone the lesson type may wrap, and task 2's table gives its object columns the room «Қарындаш» needs (360 px and up). */
-@media (max-width: 480px) { .les-head__facts dd { white-space: normal; }
-  .tasks__table { font-size: 12px; } .tasks__table th, .tasks__table td { padding-left: 2px; padding-right: 2px; } .tasks__table tr > :first-child { width: 17%; } }
+/* Kazakh words run longer: on a phone the lesson type may wrap. */
+@media (max-width: 480px) { .les-head__facts dd { white-space: normal; } }
 /* «Бағдарлама» is longer than «Программа»: on a 360 px phone its last letter would run off the nav beam. */
 @media (max-width: 380px) { .beam__stop { padding: 0 5px 0 3px; gap: 4px; } }
 /* ҚОЛ БАСЫ is 1.53 times as wide as КИСТЬ: the same share of the screen. */

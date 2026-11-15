@@ -4,7 +4,7 @@
   const { $, $$ } = RA;
 
   const TASKS = [
-    { title: 'Допиши программу', xml: () => RA.SOLUTION_XML, ready: 'Нажми запуск. Покажи красную карточку (клавиша 1), подожди, потом убери её (клавиша 0).',
+    { title: 'Допиши про\u00ADграмму', xml: () => RA.SOLUTION_XML, ready: 'Нажми запуск. Покажи красную карточку (клавиша 1), подожди, потом убери её (клавиша 0).',
       goal: 'Это программа автора модели. Красная карточка сгибает большой палец, а назад он не разгибается: в последнем стеке нет блока. Добавь его.',
       stacks: ['flipperevents_whenColor'],
       hint: 'Последний стек в левом столбце: «(F) когда цвет» с перечёркнутым кружком, это «нет цвета». Поставь под него блок из «Моторов»: E перейти самым коротким путём в положение 0.' },
@@ -457,9 +457,14 @@
       Blockly.svgResize(ws);                     // Blockly still has the size from before the task text
       const m = ws.getMetrics(), right = (blocks) => Math.max(...blocks.map((b) => b.getRelativeToSurfaceXY().x + b.getHeightWidth().width), 1);
       const tops = ws.getTopBlocks(false), x0 = Math.min(...tops.map((b) => b.getRelativeToSurfaceXY().x));
+      const left = tops.filter((b) => b.getRelativeToSurfaceXY().x < x0 + 200);
       const fit = (blocks) => (m.viewWidth - 30) / (right(blocks) + 30);
+      // Under the starter's note the left column has to fit in height too: the note, the start and the colour stacks, and room
+      // for one more block above the tools, as reveal() keeps it. Else a short screen or narrower (Kazakh) blocks scroll the note away.
+      const tall = ws.getTopComments(false).length && left.length
+        ? (m.viewHeight - 90) / (Math.max(...left.map((b) => b.getRelativeToSurfaceXY().y + b.getHeightWidth().height)) + 60) : 1;
       const all = fit(tops);
-      ws.setScale(Math.max(0.5, Math.min(0.8, all >= 0.55 ? all : fit(tops.filter((b) => b.getRelativeToSurfaceXY().x < x0 + 200)))));
+      ws.setScale(Math.max(0.5, Math.min(0.8, tall, all >= 0.55 ? all : fit(left))));
       const at = ws.getMetrics();
       ws.scrollbar.set(-at.contentLeft, -at.contentTop);       // a new scale moves the blocks: put the origin back in the corner, as load() does
       reveal();

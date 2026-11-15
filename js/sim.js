@@ -47,7 +47,7 @@
     { id: 'cube', name: 'Кубик', r: 1, hy: 1.2, dist: (p, c) => boxDist(p, c, 2, 1.2, 1) },
     { id: 'pencil', name: 'Карандаш', r: 0.5, hy: 0.5, dist: (p, c) => rodDist(p, c, 5, 0.5) },
     { id: 'ball', name: 'Мяч', r: 3, hy: 3, round: 'Круглый: выкатился вбок', dist: (p, c) => p.distanceTo(c) - 3 },
-    { id: 'apple', name: 'Яблоко', n: true, r: 3.5, hy: 3.2, round: 'Тяжёлое и круглое: выскользнуло', dist: (p, c) => p.distanceTo(c) - 3.5 },
+    { id: 'apple', name: 'Яблоко', n: true, r: 3.5, hy: 3.2, round: 'Тяжёлое и круглое: выскольз\u00ADнуло', dist: (p, c) => p.distanceTo(c) - 3.5 },
   ];
 
   function createSound(onBeep) {

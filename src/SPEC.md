@@ -135,7 +135,7 @@ h.update(dt)           // call every frame
 
 Stages (main steps of the PDF; sub-builds belong to the main step that adds them): 1 «Основание» (шаги 1–5), 2 «Хаб» (6–7),
 3 «Датчик расстояния и верхняя рама» (8–9, порт B), 4 «Два пальца» (10–13, порты A и C), 5 «Большой палец» (14, порт E),
-6 «Датчики силы и цвета» (15–20, порты D и F), 7 «Ладонь» (21). `text`: one or two plain sentences a student can follow; `parts`:
+6 «Датчики силы и цвета» (15–20, порты D и F), 7 «Накладка» (21). `text`: one or two plain sentences a student can follow; `parts`:
 plain descriptions you can see in the pictures, no counts you cannot verify. Refine the split if the pictures say otherwise.
 
 ## 4. Start view (`js/hero.js`, `css/start.css`, `src/views/start.html`, owner: model)

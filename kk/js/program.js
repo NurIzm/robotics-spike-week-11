@@ -4,7 +4,7 @@
   const { $, $$ } = RA;
 
   const TASKS = [
-    { title: 'Бағдар\u00ADламаны толықтыр', xml: () => RA.SOLUTION_XML, ready: 'Іске қосу батырмасын бас. Қызыл карточканы көрсет (1 пернесі), күте тұр, сосын оны алып таста (0 пернесі).',
+    { title: 'Бағдар\u00ADламаны толық\u00ADтыр', xml: () => RA.SOLUTION_XML, ready: 'Іске қосу батырмасын бас. Қызыл карточканы көрсет (1 пернесі), күте тұр, сосын оны алып таста (0 пернесі).',
       goal: 'Бұл — модель авторының бағдарламасы. Қызыл карточка бас бармақты бүгеді, бірақ ол кері жазылмайды: соңғы тізбекте бір блок жетіспейді. Оны қос.',
       stacks: ['flipperevents_whenColor'],
       hint: 'Сол жақ бағандағы соңғы тізбек: «(F) түсі … болғанда», дөңгелегі сызылған, яғни «түс жоқ». Оның астына «Моторлар» бөлімінен блок қой: E ең қысқа жолмен 0 позициясына бару.' },
@@ -457,9 +457,14 @@
       Blockly.svgResize(ws);                     // Blockly still has the size from before the task text
       const m = ws.getMetrics(), right = (blocks) => Math.max(...blocks.map((b) => b.getRelativeToSurfaceXY().x + b.getHeightWidth().width), 1);
       const tops = ws.getTopBlocks(false), x0 = Math.min(...tops.map((b) => b.getRelativeToSurfaceXY().x));
+      const left = tops.filter((b) => b.getRelativeToSurfaceXY().x < x0 + 200);
       const fit = (blocks) => (m.viewWidth - 30) / (right(blocks) + 30);
+      // Under the starter's note the left column has to fit in height too: the note, the start and the colour stacks, and room
+      // for one more block above the tools, as reveal() keeps it. Else a short screen or narrower (Kazakh) blocks scroll the note away.
+      const tall = ws.getTopComments(false).length && left.length
+        ? (m.viewHeight - 90) / (Math.max(...left.map((b) => b.getRelativeToSurfaceXY().y + b.getHeightWidth().height)) + 60) : 1;
       const all = fit(tops);
-      ws.setScale(Math.max(0.5, Math.min(0.8, all >= 0.55 ? all : fit(tops.filter((b) => b.getRelativeToSurfaceXY().x < x0 + 200)))));
+      ws.setScale(Math.max(0.5, Math.min(0.8, tall, all >= 0.55 ? all : fit(left))));
       const at = ws.getMetrics();
       ws.scrollbar.set(-at.contentLeft, -at.contentTop);       // a new scale moves the blocks: put the origin back in the corner, as load() does
       reveal();

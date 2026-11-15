@@ -166,6 +166,10 @@
   .tasks__tab { height: auto; min-height: 32px; font-size: 12px; padding: 3px 4px; gap: 4px; }
   .tasks__name { overflow-wrap: anywhere; hyphens: auto; }   /* «программу» is wider than an 85px tab */
   .tasks__pin { width: 14px; height: 14px; }
+  /* Task 2's table: four object columns of about 75 px. A long word («выскользнуло») wraps in its cell instead of widening the page. */
+  .tasks__table { font-size: 12px; }
+  .tasks__table th, .tasks__table td { padding-left: 2px; padding-right: 2px; overflow-wrap: anywhere; hyphens: auto; }
+  .tasks__table tr > :first-child { width: 17%; }
 }
 @container right (max-width: 500px) {
   .hubp { gap: 8px 10px; padding: 8px 8px 10px; }
