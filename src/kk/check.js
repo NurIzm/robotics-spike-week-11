@@ -9,7 +9,8 @@ const PAIRS = [
 const CYR = /[А-Яа-яЁёӘәҒғҚқҢңӨөҰұҮүҺһІі]/;
 // Words spelled the same in Kazakh, and the app path that stays Russian because SPIKE has no Kazakh.
 const SAME_IN_BOTH = new Set(['А', 'Б', 'F', 'Автономия', 'Хаб', 'Мотор', 'Кабель', 'Порт', 'Контроллер',
-  'Шарнир', 'Хирургия', 'Ферма', 'таймер', 'Пробел', '%=percent|Н=newton']);
+  'Шарнир', 'Хирургия', 'Ферма', 'таймер', 'Пробел', '%=percent|Н=newton',
+  'Н', '0,0 Н', 'см', 'робо рука 3 моторами и 3 датчиками']);   // units, and the PDF file name kept in Russian
 const RUSSIAN = /(^|[^А-Яа-яЁёӘәҒғҚқҢңӨөҰұҮүҺһІі])(и|в|на|с|что|это|как|для|по|из|от|до|или|но|если|то|когда|ты|твой|твоя|рука|кнопка|мотор[ауе]|блок[аи])(?=$|[^А-Яа-яЁёӘәҒғҚқҢңӨөҰұҮүҺһІі])/i;
 
 // String literals of a JS file, comments skipped; text inside ${…} is scanned too.

@@ -1,0 +1,690 @@
+<!doctype html>
+<html lang="kk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Қол басы</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/start.css">
+<link rel="stylesheet" href="../css/lesson.css">
+<link rel="stylesheet" href="../css/examples.css">
+<link rel="stylesheet" href="../css/blocks.css">
+<link rel="stylesheet" href="../css/program.css">
+<style>.les-opt.is-right::after { content: "Дұрыс"; } .les-opt.is-wrong::after { content: "Сенің жауабың"; }
+/* Kazakh words run longer: on a phone the lesson type may wrap, and task 2's table gives its object columns the room «Қарындаш» needs (360 px and up). */
+@media (max-width: 480px) { .les-head__facts dd { white-space: normal; }
+  .tasks__table { font-size: 12px; } .tasks__table th, .tasks__table td { padding-left: 2px; padding-right: 2px; } .tasks__table tr > :first-child { width: 17%; } }
+/* «Бағдарлама» is longer than «Программа»: on a 360 px phone its last letter would run off the nav beam. */
+@media (max-width: 380px) { .beam__stop { padding: 0 5px 0 3px; gap: 4px; } }
+/* ҚОЛ БАСЫ is 1.53 times as wide as КИСТЬ: the same share of the screen. */
+.hero { --title: min(8.2vw, 14.4vh); }
+/* The build card's «N-кезең, барлығы 7.» and «Нұсқаулықтың 1–5-қадамдары» wrap between each other, never at a hyphen. */
+.les-build__steps span { white-space: nowrap; }
+/* Program view: «Ұстап тұру» stays on one line inside its button, «Қашықтық датчигі алдындағы қол» takes two lines, not three. */
+.force__latch { white-space: nowrap; padding: 0 5px; }
+.dist__name { max-width: 128px; }</style>
+</head>
+<body>
+<header class="topbar">
+  <a class="topbar__brand" href="#start" aria-label="Қол басы, бастау бетіне">
+    <span class="topbar__week">11-апта</span>
+    <span class="topbar__topic">Манипуляторлар және автономия</span>
+  </a>
+  <nav class="beam" aria-label="Сабақ бөлімдері">
+    <a class="beam__stop" href="#start" data-view="start"><span class="beam__hole"></span><span class="beam__label">Бастау</span></a>
+    <a class="beam__stop" href="#lesson" data-view="lesson"><span class="beam__hole"></span><span class="beam__label">Сабақ</span></a>
+    <a class="beam__stop" href="#examples" data-view="examples"><span class="beam__hole"></span><span class="beam__label">Өмірде</span></a>
+    <a class="beam__stop" href="#program" data-view="program"><span class="beam__hole"></span><span class="beam__label">Бағдарлама</span></a>
+  </nav>
+</header>
+<main>
+<section id="view-start" class="view" aria-label="Бастау">
+<div class="hero">
+  <p class="hero__kicker">Робот-қол, 3-модель</p>
+  <h1 class="hero__title">Қол басы</h1>
+  <div class="hero__stage" role="img" aria-label="LEGO SPIKE Prime жиынтығындағы «Қол басы» үш өлшемді моделі: хаб, үш саусақ, үш мотор және үш датчик. Оны тінтуірмен немесе саусақпен айналдыруға болады."></div>
+  <div class="hero__foot">
+    <dl class="hero__specs">
+      <div><dt>Моторлар</dt><dd>A, C, E</dd></div>
+      <div><dt>Датчиктер</dt><dd>B, D, F</dd></div>
+      <div><dt>Саусақ саны</dt><dd>3</dd></div>
+      <div><dt>Уақыт</dt><dd>1 сағат</dd></div>
+    </dl>
+    <a class="btn btn--primary hero__go" href="#lesson">Сабақты бастау</a>
+  </div>
+</div>
+
+</section>
+<section id="view-lesson" class="view" aria-label="Сабақ" hidden>
+<div class="les">
+
+<svg class="les-defs" aria-hidden="true">
+  <symbol id="les-ico-force" viewBox="0 0 48 48"><path d="M9 18H5a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h4M39 18h4a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-4" fill="#fff" stroke="currentColor" stroke-width="1.5"/><rect x="9" y="10" width="30" height="28" rx="5" fill="#fff" stroke="currentColor" stroke-width="1.5"/><circle cx="24" cy="24" r="9" fill="currentColor"/><path d="M24 19.5v9M19.5 24h9" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></symbol>
+  <symbol id="les-ico-colour" viewBox="0 0 48 48"><rect x="6" y="6" width="36" height="36" rx="5" fill="#fff" stroke="currentColor" stroke-width="1.5"/><circle cx="24" cy="24" r="13.5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="24" cy="24" r="9.5" fill="currentColor"/></symbol>
+  <symbol id="les-ico-motor" viewBox="0 0 48 48"><circle cx="24" cy="24" r="21" fill="#fff" stroke="currentColor" stroke-width="1.5"/><circle cx="24" cy="12" r="5.7" fill="currentColor"/><circle cx="24" cy="36" r="5.7" fill="currentColor"/><circle cx="12" cy="24" r="5.7" fill="currentColor"/><circle cx="36" cy="24" r="5.7" fill="currentColor"/><path d="M24 20v8M20 24h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="les-ico-play" viewBox="0 0 48 48"><path d="M17 13 35 24 17 35z" fill="#fff" stroke="#fff" stroke-width="3.5" stroke-linejoin="round"/></symbol>
+  <!-- Week 9's Роборука from the side: hub, frame, motor, two fingers with tyres. -->
+  <symbol id="les-pic-arm" viewBox="0 0 230 92">
+    <rect x="6" y="22" width="66" height="48" rx="5" fill="#eceded" stroke="#10202a" stroke-width="2"/>
+    <rect x="6" y="22" width="66" height="9" rx="4" fill="#fed920"/>
+    <circle cx="20" cy="50" r="5" fill="#fff" stroke="#c92e85" stroke-width="3"/>
+    <circle cx="60" cy="52" r="7" fill="#fff" stroke="#10202a" stroke-width="2"/>
+    <rect x="79" y="25" width="60" height="42" rx="5" fill="none" stroke="#c92e85" stroke-width="9"/>
+    <rect x="143" y="33" width="20" height="26" rx="3" fill="#01adc4"/>
+    <rect x="161" y="35" width="13" height="22" rx="3" fill="#eceded" stroke="#10202a" stroke-width="2"/>
+    <path d="M172 40l26-26M172 52l26 26" stroke="#16151a" stroke-width="7" fill="none"/>
+    <circle cx="207" cy="14" r="10" fill="#16151a"/>
+    <circle cx="207" cy="78" r="10" fill="#16151a"/>
+  </symbol>
+  <!-- Week 10's Захваты from the side: hub, stand with the Force Sensor and its wheel, grabber 2 in front. -->
+  <symbol id="les-pic-tool" viewBox="0 0 360 200">
+    <path d="M60 40C46 70 60 104 52 122M118 120c12-10 20-12 26-12" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round"/>
+    <path d="M60 40C46 70 60 104 52 122M118 120c12-10 20-12 26-12" fill="none" stroke="#a9b0b5" stroke-width="1.5" stroke-dasharray="1 4" stroke-linecap="round"/>
+    <rect x="20" y="120" width="112" height="70" rx="8" fill="#fed920"/>
+    <rect x="25" y="125" width="102" height="60" rx="5" fill="#eceded"/>
+    <circle cx="40" cy="155" r="8" fill="#fff" stroke="#10202a" stroke-width="2"/>
+    <path d="M66 140h1M76 140h1M86 140h1M96 140h1M106 140h1M66 150h1M76 150h1M86 150h1M96 150h1M106 150h1M66 160h1M76 160h1M86 160h1M96 160h1M106 160h1M66 170h1M76 170h1M86 170h1M96 170h1M106 170h1" stroke="#a9b0b5" stroke-width="6" stroke-linecap="round"/>
+    <rect x="8" y="22" width="11" height="168" rx="3" fill="#16151a"/>
+    <rect x="24" y="52" width="10" height="68" rx="3" fill="#01adc4"/>
+    <rect x="6" y="80" width="32" height="12" rx="3" fill="#c92e85"/>
+    <rect x="28" y="12" width="12" height="40" rx="3" fill="#16151a"/>
+    <rect x="38" y="12" width="40" height="40" rx="5" fill="#eceded" stroke="#10202a" stroke-width="2"/>
+    <rect x="78" y="28" width="16" height="8" fill="#16151a"/>
+    <rect x="92" y="14" width="14" height="36" rx="4" fill="#16151a"/>
+    <path d="M95 18v28M99 18v28M103 18v28" stroke="#47586a" stroke-width="1.5"/>
+    <rect x="108" y="98" width="62" height="24" rx="4" fill="#01adc4"/>
+    <rect x="168" y="96" width="28" height="28" rx="4" fill="#eceded" stroke="#10202a" stroke-width="2"/>
+    <rect x="196" y="100" width="22" height="20" rx="3" fill="#c92e85"/>
+    <path d="M214 104h56l18-12h40l10 10-10 6h-36l-16 12h-62z" fill="#16151a"/>
+    <path d="M214 116h60l14 10h44l8 8-8 6h-48l-14-10h-56z" fill="#16151a" opacity="0.72"/>
+    <circle cx="244" cy="112" r="4" fill="#fed920"/>
+  </symbol>
+  <!-- Today's Кисть from the back, as on the PDF cover: frames, hub screen, the cover, two fingers of paired black liftarms, the yellow thumb on the left. -->
+  <symbol id="les-pic-hand" viewBox="4 2 172 196">
+    <rect x="44" y="186" width="124" height="10" rx="4" fill="#7fd3e6" stroke="#10202a" stroke-width="2"/>
+    <rect x="58" y="140" width="96" height="46" rx="5" fill="#eceded" stroke="#10202a" stroke-width="2"/>
+    <rect x="58" y="140" width="9" height="46" rx="3" fill="#fed920"/>
+    <rect x="145" y="140" width="9" height="46" rx="3" fill="#fed920"/>
+    <circle cx="106" cy="163" r="7" fill="#fff" stroke="#10202a" stroke-width="2"/>
+    <rect x="44" y="128" width="124" height="12" rx="4" fill="#7fd3e6" stroke="#10202a" stroke-width="2"/>
+    <path d="M70 92V22M90 92V22M116 92V22M136 92V22" fill="none" stroke="#16151a" stroke-width="9"/>
+    <rect x="63" y="8" width="34" height="16" rx="5" fill="#16151a"/>
+    <rect x="109" y="8" width="34" height="16" rx="5" fill="#16151a"/>
+    <rect x="74" y="38" width="12" height="10" rx="3" fill="#eceded"/>
+    <rect x="120" y="38" width="12" height="10" rx="3" fill="#eceded"/>
+    <circle cx="44" cy="104" r="15" fill="#a9b0b5" stroke="#10202a" stroke-width="2" stroke-dasharray="3 2"/>
+    <path d="M48 98H14V76" fill="none" stroke="#fed920" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="58" y="70" width="96" height="58" rx="7" fill="#7fd3e6" stroke="#10202a" stroke-width="2"/>
+    <rect x="58" y="70" width="96" height="10" rx="3" fill="#1e5aa8"/>
+    <rect x="98" y="80" width="16" height="44" fill="#16151a"/>
+    <rect x="76" y="108" width="60" height="16" rx="3" fill="#c92e85"/>
+  </symbol>
+</svg>
+
+<header class="les-head">
+  <div>
+    <p class="les-head__kicker">Сабақ: Робот-қол, 3-модель. Көп саусақты қармауыштар</p>
+    <h1>Манипулятор&shy;лар және автономия</h1>
+  </div>
+  <div class="les-head__mid">
+    <p class="les-head__goal"><b>Мақсаты</b> Екі-үш саусақты қармауыштар, модельді жақсарту, жеке қармауыш құрастыру.</p>
+    <dl class="les-head__facts">
+      <div><dt>Уақыты</dt><dd>1&nbsp;сағат</dd></div>
+      <div><dt>Жұмыс түрі</dt><dd>Құрастыру және бөлшектеу</dd></div>
+      <div><dt>Аптасы</dt><dd>11</dd></div>
+    </dl>
+  </div>
+  <nav class="les-route" aria-labelledby="les-route-title">
+    <h2 id="les-route-title">Нені үйренеміз</h2>
+    <ol>
+      <li><button type="button" data-to="les-was">Үш модель</button></li>
+      <li><button type="button" data-to="les-fing">Неше саусақ</button></li>
+      <li><button type="button" data-to="les-hand">Біздің қол басымыз</button></li>
+      <li><button type="button" data-to="les-code">Қол басының бағдар&shy;ламасы</button></li>
+      <li><button type="button" data-to="les-better">Модельді жақсарту</button></li>
+      <li><button type="button" data-to="les-own">Жеке қармауыш</button></li>
+      <li><button type="button" data-to="les-build">Құрастыру және бөлшектеу</button></li>
+      <li><button type="button" data-to="les-auto">Кім шешеді</button></li>
+      <li><button type="button" data-to="les-quiz">Шағын тест</button></li>
+    </ol>
+  </nav>
+</header>
+
+<section class="les-sec les-was" id="les-was" aria-labelledby="les-was-title">
+  <div>
+    <h2 id="les-was-title">Бір тақырыптың үш моделі</h2>
+    <p class="les-lead">Үш сабақ, үш робот-қол. Әрқайсысы алдыңғысынан көбірек істей алады.</p>
+  </div>
+  <div class="les-vs">
+    <article class="les-vs__col">
+      <svg class="les-vs__pic" viewBox="0 0 230 92" aria-hidden="true"><use href="#les-pic-arm"/></svg>
+      <h3><span>9-апта</span> Робот-қол</h3>
+      <dl>
+        <div><dt>Моторлар</dt><dd>Біреу, F портында.</dd></div>
+        <div><dt>Саусақтар</dt><dd>Екеу, шиналы. Оларды бір мотор қысады.</dd></div>
+        <div><dt>Басқару</dt><dd>Хабтағы сол жақ батырма.</dd></div>
+      </dl>
+    </article>
+    <article class="les-vs__col">
+      <svg class="les-vs__pic" viewBox="0 0 360 200" aria-hidden="true"><use href="#les-pic-tool"/></svg>
+      <h3><span>10-апта</span> Қармауыштар</h3>
+      <dl>
+        <div><dt>Моторлар</dt><dd>Біреу, A портында.</dd></div>
+        <div><dt>Саусақтар</dt><dd>Екі ауыстырмалы қармауыш: иілгіш және айыр.</dd></div>
+        <div><dt>Басқару</dt><dd>E портындағы күш датчигі. Ол өзінің қаншалықты қатты басылғанын сезеді.</dd></div>
+      </dl>
+    </article>
+    <article class="les-vs__col les-vs__col--now">
+      <svg class="les-vs__pic" viewBox="0 0 172 196" aria-hidden="true"><use href="#les-pic-hand"/></svg>
+      <h3><span>11-апта, бүгін</span> Қол басы</h3>
+      <dl>
+        <div><dt>Моторлар</dt><dd>Үшеу: A, C және E. Әр саусақтың өз моторы бар.</dd></div>
+        <div><dt>Саусақтар</dt><dd>Үшеу: екі саусақ және бас бармақ.</dd></div>
+        <div><dt>Басқару</dt><dd>Үш датчик: күш (D), түс (F) және қашықтық (B) датчиктері.</dd></div>
+      </dl>
+    </article>
+  </div>
+  <p class="les-was__sum"><b>Модельді жақсарту</b> — оның нені нашар істейтінін тауып, дәл соны қайта жасау деген сөз. Робот-қол мен Қармауыштарда бәрі бірге, бір мотордан қысылатын. Қол басында әр саусақ өз бетінше қозғалады.</p>
+</section>
+
+<section class="les-sec les-fing" id="les-fing" aria-labelledby="les-fing-title">
+  <div>
+    <h2 id="les-fing-title">Неше саусақ керек?</h2>
+    <p class="les-lead">Екі саусақ затты екі жағынан қысады. Үш саусақ оны үш жағынан орап ұстайды. Зат пен қармауды таңда.</p>
+  </div>
+  <div class="les-fing__lab">
+    <div class="les-fing__pick">
+      <fieldset class="les-chips">
+        <legend>Зат</legend>
+        <label><input type="radio" name="les-thing" value="cube"><span>LEGO текшесі</span></label>
+        <label><input type="radio" name="les-thing" value="ball" checked><span>Доп</span></label>
+        <label><input type="radio" name="les-thing" value="pencil"><span>Қарындаш</span></label>
+        <label><input type="radio" name="les-thing" value="apple"><span>Алма</span></label>
+      </fieldset>
+      <fieldset class="les-chips">
+        <legend>Қармау</legend>
+        <label><input type="radio" name="les-grip" value="2" checked><span>2 саусақ</span></label>
+        <label><input type="radio" name="les-grip" value="3"><span>3 саусақ</span></label>
+      </fieldset>
+    </div>
+    <figure class="les-fing__fig">
+      <svg id="les-fing-svg" viewBox="-100 -100 200 200" role="img" aria-labelledby="les-fing-touch">
+        <circle class="les-fing__ring" r="92"/>
+        <g data-thing="cube"><rect class="les-fing__cube" x="-34" y="-34" width="68" height="68" rx="3"/><circle class="les-fing__stud" cx="-15" cy="-15" r="9"/><circle class="les-fing__stud" cx="15" cy="-15" r="9"/><circle class="les-fing__stud" cx="-15" cy="15" r="9"/><circle class="les-fing__stud" cx="15" cy="15" r="9"/></g>
+        <g data-thing="ball"><circle class="les-fing__ball" r="40"/><path class="les-fing__seam" d="M-28-28c18 14 18 42 0 56M28-28c-18 14-18 42 0 56"/></g>
+        <g data-thing="pencil"><path class="les-fing__pencil" d="M15.6-9V9L0 18-15.6 9V-9L0-18z"/><circle class="les-fing__wood" r="9"/><circle class="les-fing__lead" r="3.5"/></g>
+        <g data-thing="apple"><circle class="les-fing__apple" r="48"/><path class="les-fing__stem" d="M0-6C1-16 4-22 8-27"/><path class="les-fing__leaf" d="M3-14c8-12 20-11 24-6-8 7-17 9-24 6z"/></g>
+        <g id="les-fing-jaws"><g class="les-jaw"><rect x="0" y="-17" width="110" height="34" rx="8"/></g><g class="les-jaw"><rect x="0" y="-17" width="110" height="34" rx="8"/></g><g class="les-jaw"><rect x="0" y="-17" width="110" height="34" rx="8"/></g></g>
+        <g id="les-fing-dots"></g>
+      </svg>
+      <figcaption>Үстінен көрініс. Саусақтар затқа тиетін жер қызғылт түспен белгіленген.</figcaption>
+    </figure>
+    <div class="les-fing__out" aria-live="polite">
+      <p class="les-fing__touch" id="les-fing-touch"></p>
+      <p class="les-fing__v" id="les-fing-v"></p>
+      <p class="les-fing__why" id="les-fing-why"></p>
+    </div>
+  </div>
+  <p class="les-fing__note">Сызба жеңілдетілген: саусақтар жалпақ және дәл ортаға қарай жиналады. Шын мәнінде көп нәрсені саусақтардың пішіні, резеңке және қысу күші шешеді.</p>
+  <div class="les-thumb">
+    <p><b>Адамның қолы.</b> Адамның бас бармағы басқа саусақтарға қарама-қарсы тұр: ол олардың әрқайсысына тиіп тұра алады. Қарындашты бас бармағыңды тигізбей үстелден көтеріп көр.</p>
+    <p><b>Біздің қол басымыз.</b> Оның да бас бармағы бар. Ол алақанға қарай, басқа екі саусаққа қарсы бұрылады.</p>
+  </div>
+</section>
+
+<section class="les-sec les-hand" id="les-hand" aria-labelledby="les-hand-title">
+  <div>
+    <h2 id="les-hand-title">Біздің қол басымыз</h2>
+    <p class="les-lead">Бөлікті бас: ол жарқын болып қалады, ал қалғанының бәрі бозарады. Модельді айналдыруға болады.</p>
+  </div>
+  <div class="les-hand__bench">
+    <div class="les-hand__stage" id="les-hand-stage" role="img" aria-label="Қол басының үш өлшемді моделі. Оны айналдыруға болады."></div>
+    <div class="les-hand__panel">
+      <div class="les-parts" id="les-parts" role="group" aria-label="Қол басының бөліктері"></div>
+      <div class="les-part" aria-live="polite">
+        <h3 id="les-part-name">Бүкіл қол басы</h3>
+        <p id="les-part-role">Хаб, үш мотор және үш датчик: жинақтың бүкіл электроникасы.</p>
+      </div>
+    </div>
+  </div>
+  <div class="les-hand__more">
+    <div class="les-hand__ports">
+      <h3>Порттар</h3>
+      <table class="les-tab les-ptab">
+        <thead><tr><th scope="col">Порт</th><th scope="col">Не қосылған</th><th scope="col">Не үшін</th></tr></thead>
+        <tbody>
+          <tr><th scope="row"><button type="button" class="les-port" data-part="fingerA" aria-label="A порты: A саусағын көрсету">A</button></th><td>Орташа мотор</td><td>A саусағы</td></tr>
+          <tr><th scope="row"><button type="button" class="les-port" data-part="distance" aria-label="B порты: қашықтық датчигін көрсету">B</button></th><td>Қашықтық датчигі</td><td>Алақаннан сыртқа қарайды. Автордың бағдарламасы оны пайдаланбайды</td></tr>
+          <tr><th scope="row"><button type="button" class="les-port" data-part="fingerC" aria-label="C порты: C саусағын көрсету">C</button></th><td>Орташа мотор</td><td>C саусағы, бас бармақтың жанында</td></tr>
+          <tr><th scope="row"><button type="button" class="les-port" data-part="controls" aria-label="D порты: күш және түс датчиктерін көрсету">D</button></th><td>Күш датчигі</td><td>Батырма: A және C саусақтарын бүгеді</td></tr>
+          <tr><th scope="row"><button type="button" class="les-port" data-part="thumb" aria-label="E порты: бас бармақты көрсету">E</button></th><td>Үлкен мотор</td><td>Бас бармақ, екі тісті дөңгелек арқылы</td></tr>
+          <tr><th scope="row"><button type="button" class="les-port" data-part="controls" aria-label="F порты: күш және түс датчиктерін көрсету">F</button></th><td>Түс датчигі</td><td>Қызыл карточка бас бармақты бүгеді</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <figure class="les-how">
+      <svg viewBox="0 0 240 200" aria-hidden="true">
+        <path class="les-how__arc" d="M120 22A118 118 0 0 1 198 170"/>
+        <path class="les-how__tip" d="M198 170l-14-2 9-11z"/>
+        <rect class="les-how__motor" x="58" y="108" width="54" height="54" rx="9"/>
+        <g class="les-how__finger"><path d="M85 135V40l35-18"/><circle cx="85" cy="70" r="3.5"/><circle cx="85" cy="100" r="3.5"/></g>
+        <circle class="les-how__rotor" cx="85" cy="135" r="13"/>
+        <path class="les-how__axle" d="M79 135h12M85 129v12"/>
+      </svg>
+      <figcaption><b>Саусақ қалай қозғалады.</b> Бүкіл саусақ өз моторының білігінде бұрылады. Саусақтың ішінде буын жоқ: ол қатты, иілмейді.</figcaption>
+    </figure>
+    <figure class="les-gears">
+      <!-- An oblique view, depth going up and right (pages 34–36): one gear stands on the motor's output, the other lies on the motor's
+           top and carries the thumb. Lying things go through matrix(1 0 -.42 .42 …): their "towards us" axis runs down and left. -->
+      <svg viewBox="0 0 280 200" aria-hidden="true">
+        <path class="les-gears__motor les-gears__motor--top" d="M40 96h88l34-34H74z"/>
+        <path class="les-gears__motor les-gears__motor--side" d="M128 96l34-34v70l-34 34z"/>
+        <path class="les-gears__motor" d="M40 96h88v70H40z"/>
+        <g transform="translate(85.7 126.3)"><g data-stand><path class="les-gears__wheel les-gears__wheel--side"/></g></g>
+        <g transform="translate(84 128)"><g data-stand><path class="les-gears__wheel"/><circle class="les-gears__hub" r="9"/><path class="les-gears__mark" d="M0-9v-17"/></g></g>
+        <g transform="matrix(1 0 -.42 .42 97.4 85.6)"><g data-lie><path class="les-gears__wheel les-gears__wheel--side" transform="rotate(7.5)"/></g></g>
+        <g transform="matrix(1 0 -.42 .42 97.4 80.6)"><g data-lie><path class="les-gears__wheel" transform="rotate(7.5)"/><path class="les-gears__mark" d="M0 12v17"/></g></g>
+        <path class="les-gears__axle" d="M97.4 80.6V68.6"/>
+        <g transform="matrix(1 0 -.42 .42 97.4 74)"><circle class="les-gears__pin" r="11"/></g>
+        <g transform="matrix(1 0 -.42 .42 97.4 68.6)"><g data-lie><path class="les-gears__thumb les-gears__thumb--edge" d="M0 0H88"/><path class="les-gears__thumb" d="M0 0H88"/></g></g>
+        <text class="les-gears__lbl" x="84" y="192">E моторы</text>
+        <text class="les-gears__lbl" x="222" y="104">бас<tspan x="222" dy="18">бармақ</tspan></text>
+      </svg>
+      <figcaption><b>Бас бармақтың тісті дөңгелектері.</b> Әрқайсысында 24 тіс бар екі бірдей тісті дөңгелек тік бұрыш жасап ілініскен: біреуі мотордың білігінде тік тұр, екіншісі мотордың үстінде жатыр. Осылай айналу тік бұрыш жасап тұрған басқа білікке беріледі. Тістері бірдей, 1:1, сондықтан бас бармақ мотор қанша градусқа бұрылса, сонша градусқа бұрылады.</figcaption>
+      <label class="les-range">E моторын бұр<input type="range" id="les-gear" min="0" max="80" value="0"></label>
+      <p class="les-gears__out" id="les-gear-out"></p>
+    </figure>
+  </div>
+</section>
+
+<section class="les-sec les-code" id="les-code" aria-labelledby="les-code-title">
+  <div>
+    <h2 id="les-code-title">Қол басының бағдарламасы</h2>
+    <p class="les-lead">«Manipulator 1» бағдарламасын модельдің авторы жазған. Онда алты ішкі бағдарлама бар, әрқайсысы өз оқиғасын күтеді. Ішкі бағдарлама жұмыс істеп тұрғанда, ол SPIKE қолданбасындағыдай жарқырайды.</p>
+  </div>
+  <div class="les-code__bench">
+    <div class="les-stacks">
+      <div class="les-stacks__group">
+        <h3>Іске қосу</h3>
+        <article class="les-stack" data-stack="start">
+          <div class="les-prog" role="img" aria-label="Бағдарлама іске қосылғанда: A, C және E моторларының жылдамдығы 100 пайыз болсын, сосын A, C және E ең қысқа жолмен 0 позициясына бару.">
+            <div class="blk blk--hat blk--event"><svg class="blk__ico"><use href="#les-ico-play"/></svg>бағдарлама іске қосылғанда</div>
+            <div class="blk blk--motor"><svg class="blk__ico"><use href="#les-ico-motor"/></svg><span class="blk__port">A</span>жылдамдығы<span class="blk__num">100</span>% болсын</div>
+            <div class="blk blk--motor"><svg class="blk__ico"><use href="#les-ico-motor"/></svg><span class="blk__port">C</span>жылдамдығы<span class="blk__num">100</span>% болсын</div>
+            <div class="blk blk--motor"><svg class="blk__ico"><use href="#les-ico-motor"/></svg><span class="blk__port">E</span>жылдамдығы<span class="blk__num">100</span>% болсын</div>
+            <div class="blk blk--motor"><svg class="blk__ico"><use href="#les-ico-motor"/></svg><span class="blk__port">A</span><span class="blk__dd">ең қысқа жолмен</span><span class="blk__num">0</span>позициясына бару</div>
+            <div class="blk blk--motor"><svg class="blk__ico"><use href="#les-ico-motor"/></svg><span class="blk__port">C</span><span class="blk__dd">ең қысқа жолмен</span><span class="blk__num">0</span>позициясына бару</div>
+            <div class="blk blk--motor"><svg class="blk__ico"><use href="#les-ico-motor"/></svg><span class="blk__port">E</span><span class="blk__dd">ең қысқа жолмен</span><span class="blk__num">0</span>позициясына бару</div>
+          </div>
+          <p>Іске қосқанда: жылдамдық ең жоғары, ал үш саусақ та 0 позициясына барады, яғни ашылады.</p>
+        </article>
+      </div>
+      <div class="les-stacks__group">
+        <h3>Күш датчигі, D порты</h3>
+        <article class="les-stack" data-stack="pressed">
+          <div class="les-prog" role="img" aria-label="D басылған кезде: C ең қысқа жолмен 270 позициясына бару.">
+            <div class="blk blk--hat blk--event"><svg class="blk__ico"><use href="#les-ico-force"/></svg><span class="blk__port">D</span><span class="blk__dd">басылған</span>кезде</div>
+            <div class="blk blk--motor"><svg class="blk__ico"><use href="#les-ico-motor"/></svg><span class="blk__port">C</span><span class="blk__dd">ең қысқа жолмен</span><span class="blk__num">270</span>позициясына бару</div>
+          </div>
+          <p>Ақырын басылды: C саусағы бүгіледі. 0-ден 270-ке дейінгі ең қысқа жол — сағат тіліне қарсы 90°-қа бұрылу.</p>
+        </article>
+        <article class="les-stack" data-stack="hard">
+          <div class="les-prog" role="img" aria-label="D қатты басылған кезде: A ең қысқа жолмен 90 позициясына бару.">
+            <div class="blk blk--hat blk--event"><svg class="blk__ico"><use href="#les-ico-force"/></svg><span class="blk__port">D</span><span class="blk__dd">қатты басылған</span>кезде</div>
+            <div class="blk blk--motor"><svg class="blk__ico"><use href="#les-ico-motor"/></svg><span class="blk__port">A</span><span class="blk__dd">ең қысқа жолмен</span><span class="blk__num">90</span>позициясына бару</div>
+          </div>
+          <p>Қатты басылды: A саусағы да бүгіледі. A және C саусақтары бір-біріне айналық симметриялы, сондықтан A саусағының позициясы 90, ал C саусағының позициясы 270.</p>
+        </article>
+        <article class="les-stack" data-stack="released">
+          <div class="les-prog" role="img" aria-label="D жіберілген кезде: A ең қысқа жолмен 0 позициясына бару, сосын C ең қысқа жолмен 0 позициясына бару.">
+            <div class="blk blk--hat blk--event"><svg class="blk__ico"><use href="#les-ico-force"/></svg><span class="blk__port">D</span><span class="blk__dd">жіберілген</span>кезде</div>
+            <div class="blk blk--motor"><svg class="blk__ico"><use href="#les-ico-motor"/></svg><span class="blk__port">A</span><span class="blk__dd">ең қысқа жолмен</span><span class="blk__num">0</span>позициясына бару</div>
+            <div class="blk blk--motor"><svg class="blk__ico"><use href="#les-ico-motor"/></svg><span class="blk__port">C</span><span class="blk__dd">ең қысқа жолмен</span><span class="blk__num">0</span>позициясына бару</div>
+          </div>
+          <p>Жіберілді: алдымен A саусағы жазылады, одан кейін C саусағы.</p>
+        </article>
+      </div>
+      <div class="les-stacks__group">
+        <h3>Түс датчигі, F порты</h3>
+        <article class="les-stack" data-stack="red">
+          <div class="les-prog" role="img" aria-label="F түсі қызыл болғанда: E ең қысқа жолмен 80 позициясына бару.">
+            <div class="blk blk--hat blk--event"><svg class="blk__ico"><use href="#les-ico-colour"/></svg><span class="blk__port">F</span>түсі<span class="blk__dd blk__dd--sw"><i style="background:#e3000b"></i>қызыл</span>болғанда</div>
+            <div class="blk blk--motor"><svg class="blk__ico"><use href="#les-ico-motor"/></svg><span class="blk__port">E</span><span class="blk__dd">ең қысқа жолмен</span><span class="blk__num">80</span>позициясына бару</div>
+          </div>
+          <p>Қызыл карточка көрсетілді: бас бармақ бүгіледі.</p>
+        </article>
+        <article class="les-stack" data-stack="none">
+          <div class="les-prog" role="img" aria-label="F түсі түс жоқ болғанда: E ең қысқа жолмен 0 позициясына бару.">
+            <div class="blk blk--hat blk--event"><svg class="blk__ico"><use href="#les-ico-colour"/></svg><span class="blk__port">F</span>түсі<span class="blk__dd blk__dd--sw"><i class="is-none"></i>түс жоқ</span>болғанда</div>
+            <div class="blk blk--motor"><svg class="blk__ico"><use href="#les-ico-motor"/></svg><span class="blk__port">E</span><span class="blk__dd">ең қысқа жолмен</span><span class="blk__num">0</span>позициясына бару</div>
+          </div>
+          <p>Карточка алынды: датчик түс көрмейді («түс жоқ»), сондықтан бас бармақ жазылады.</p>
+        </article>
+      </div>
+    </div>
+    <div class="les-try" id="les-try">
+      <div class="les-try__stage" id="les-try-stage" role="img" aria-label="Қол басының үш өлшемді моделі, алақан мен бас бармақ жағынан көрініс. Оны айналдыруға болады."></div>
+      <div class="les-try__panel">
+        <p class="les-try__lbl">Күш датчигі (D)</p>
+        <div class="les-switch les-switch--3" role="group" aria-label="Күш датчигі (D)">
+          <button type="button" data-force="0" aria-pressed="true">Жіберілген</button>
+          <button type="button" data-force="1" aria-pressed="false">Басылған</button>
+          <button type="button" data-force="2" aria-pressed="false">Қатты басылған</button>
+        </div>
+        <p class="les-try__lbl">Түс датчигі (F)</p>
+        <button type="button" class="les-card" id="les-card" aria-pressed="false"><i></i>Қызыл карточка</button>
+        <p class="les-try__read"><span>A <output id="les-pos-A">0</output>°</span><span>C <output id="les-pos-C">0</output>°</span><span>E <output id="les-pos-E">0</output>°</span></p>
+        <p class="les-try__hint">Байқап көр: алдымен ақырын бас, сосын қатты бас, сосын жібер. Күш және түс датчиктері алақан жағында тұр, адам да сол жақта жұмыс істейді.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="les-sec les-better" id="les-better" aria-labelledby="les-better-title">
+  <div>
+    <h2 id="les-better-title">Модельді жақсарту</h2>
+    <p class="les-lead">Модель бірінші реттен мінсіз шыға бермейді. Инженерлер оны шеңбер бойымен жақсартады:</p>
+  </div>
+  <div class="les-cycle">
+    <ol>
+      <li><b>Құрастырдық</b> Нұсқаулық бойынша.</li>
+      <li><b>Сынадық</b> Әртүрлі заттарды аламыз.</li>
+      <li><b>Әлсіз жерін таптық</b> Не түсіп қалады және неге?</li>
+      <li><b>Жақсарттық</b> Бір нәрсені өзгертеміз.</li>
+      <li><b>Қайта сынадық</b> Жақсарды ма?</li>
+    </ol>
+  </div>
+  <div class="les-ideas">
+    <article class="les-idea">
+      <h3>Саусақтарға резеңке қаптама</h3>
+      <p>Резеңке үйкеліс береді, сондықтан зат сырғып түспейді. Робот-қолдың саусақтарындағы шиналар да осылай жұмыс істеді.</p>
+    </article>
+    <article class="les-idea">
+      <h3>Бір басумен үш саусақ</h3>
+      <p>Қазір бас бармаққа карточка да керек. Егер қатты басу үш саусақтың бәрін бүгетін болса, бір қол жетеді.</p>
+      <p class="les-idea__try">«Үш саусақ бір батырмамен» тапсырмасы «Бағдарлама» бетінде.</p>
+    </article>
+    <article class="les-idea">
+      <h3>Қол басы өзі әрекет етеді</h3>
+      <p>Қашықтық датчигі модельге орнатылып қойған, бірақ бағдарлама оны пайдаланбайды. Онымен қол басы біреу оған қолын жақындатқанда өзі ашыла алады.</p>
+      <p class="les-idea__try">«Затты ұсын» тапсырмасы «Бағдарлама» бетінде.</p>
+    </article>
+    <article class="les-idea">
+      <h3>Бас бармаққа басқа тісті дөңгелектер</h3>
+      <p>Қазір тісті дөңгелектер бірдей, 1:1. Моторда кішісі, саусақта үлкені болса: саусақ күштірек, бірақ баяуырақ. Керісінше болса: жылдамырақ, бірақ әлсіздеу.</p>
+    </article>
+  </div>
+</section>
+
+<section class="les-sec les-own" id="les-own" aria-labelledby="les-own-title">
+  <div>
+    <h2 id="les-own-title">Жеке қармауыш</h2>
+    <p class="les-lead">Өз затыңа арналған қармауыш ойлап тап. Жауаптарды таңда, сонда қармауыш паспорты пайда болады. Ол осы браузерде сақталады.</p>
+  </div>
+  <div class="les-own__bench">
+    <form class="les-plan" id="les-plan" autocomplete="off">
+      <label class="les-plan__name">Атауы<input type="text" name="gname" maxlength="30" placeholder="Менің қармауышым"></label>
+    </form>
+    <article class="les-pass" id="les-pass" aria-live="polite"></article>
+  </div>
+  <div class="les-rules">
+    <div>
+      <h3>Қалай құрастырамыз</h3>
+      <ol>
+        <li>Алдымен паспорт, сосын құрастыру: сонда қанша мотор керек екені бірден көрінеді.</li>
+        <li>Бөлшектерді қол басына кірмегендерінен аламыз.</li>
+        <li>Моторлар мен датчиктерді қол басынан шешіп аламыз: жинақта басқалары жоқ. Қай кабель қай портқа барғанын есте сақтаймыз.</li>
+      </ol>
+    </div>
+    <div>
+      <h3>Қалай сынаймыз</h3>
+      <ol>
+        <li>Үш зат: жақтары тегіс, домалақ және ауыр.</li>
+        <li>Әрқайсысын үш рет бірдей аламыз. Өткен сабақтағы әділ сынақтағыдай, тек бір нәрсені өзгертеміз.</li>
+        <li>Нәтижені паспортқа белгілейміз. Ұстамаса — әлсіз жерін тауып, жақсартамыз.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section class="les-sec les-build" id="les-build" aria-labelledby="les-build-title">
+  <div>
+    <h2 id="les-build-title">Құрастыру және бөлшектеу</h2>
+    <p class="les-lead">Нұсқаулық — мұғалімдегі PDF файл: «<span lang="ru">робо рука 3 моторами и 3 датчиками</span>». SPIKE қолданбасында бұл модель жоқ. Нұсқаулықта 21 негізгі қадам. Саусақтарды, бас бармақты, датчиктері бар раманы және қаптаманы бөлек құрастырып, сосын орнына қояды.</p>
+    <p class="les-credit">SPIKE Manipulator моделі, авторы — Irwin Wu</p>
+  </div>
+  <div class="les-build__bench">
+    <div class="les-build__stage" id="les-build-stage" role="img" aria-label="Құрастыру кезеңіндегі үш өлшемді модель. Оны айналдыруға болады."></div>
+    <div class="les-build__card" aria-live="polite">
+      <p class="les-build__steps"><span id="les-stage-n"></span> <span id="les-stage-steps"></span></p>
+      <h3 id="les-stage-title"></h3>
+      <p id="les-stage-text"></p>
+      <p class="les-build__parts"><b>Бөлшектер</b> <span id="les-stage-parts"></span></p>
+      <div class="les-build__nav">
+        <button type="button" class="btn" id="les-stage-prev" disabled>Артқа</button>
+        <button type="button" class="btn btn--primary" id="les-stage-next">Әрі қарай</button>
+      </div>
+    </div>
+  </div>
+  <ol class="les-rail" id="les-rail" aria-label="Құрастыру кезеңдері, нұсқаулықтың әр қадамына бір тесік"></ol>
+  <div class="les-build__how">
+    <p><b>Жұппен жұмыс істейміз.</b> А оқушысы негізгі бөлікті құрастырады: негізді, хабты, қашықтық датчигін және жоғарғы раманы. Б оқушысы бөлек бөліктерді құрастырады: саусақтарды, бас бармақты, датчиктері бар раманы және қаптаманы. Сосын нұсқаулықтың қадамдары бойынша бөліктерді бірге негізгі бөлікке орнатады.</p>
+    <p class="les-ports"><span>A саусағы <b>A</b></span><span>C саусағы <b>C</b></span><span>Бас бармақ <b>E</b></span><span>Қашықтық <b>B</b></span><span>Күш <b>D</b></span><span>Түс <b>F</b></span></p>
+  </div>
+  <div class="les-build__take">
+    <label class="les-range">Бөлшектеу<input type="range" id="les-explode" min="0" max="100" value="0"></label>
+    <p>Сабақтың соңында модельді бөлшектеңдер де, бөлшектерді ұяшықтарға сұрыптап салыңдар: штифт — штифтке, арқалық — арқалыққа. Кабельдерді хабтан ұшынан ұстап суырыңдар, сымынан тартпаңдар.</p>
+  </div>
+</section>
+
+<section class="les-sec les-auto" id="les-auto" aria-labelledby="les-auto-title">
+  <div class="les-auto__head">
+    <h2 id="les-auto-title">Қашан қысу керегін кім шешеді?</h2>
+    <p>Манипулятор — роботтың қолы. Автономия дегеніміз — машинаның не істеу керегін өзі шешуі. Үш сабақта біздің робот-қолдарымыз осы баспалдақпен жоғары көтерілді.</p>
+  </div>
+  <ol class="les-ladder">
+    <li>
+      <svg class="les-ladder__pic" viewBox="0 0 230 92" aria-hidden="true"><use href="#les-pic-arm"/></svg>
+      <h3>Қолмен басқару</h3>
+      <p class="les-ladder__who">Адам шешеді</p>
+      <p><b>9-апта, хаб батырмасы.</b> Бастың — қол қысылды, жібердің — ашылды. Әр команданы адам береді.</p>
+    </li>
+    <li>
+      <svg class="les-ladder__pic" viewBox="0 0 360 200" aria-hidden="true"><use href="#les-pic-tool"/></svg>
+      <h3>Бағдарлама</h3>
+      <p class="les-ladder__who">Бағдарлама шешеді, оны адам жазған</p>
+      <p><b>10-апта, күш датчигі.</b> Адам басады, ал мотордың қалай қозғалып, қай жерде тоқтайтынын бағдарлама шешеді.</p>
+      <p class="les-ladder__next">Қол басында бағдарлама саусақтарды да таңдайды: ақырын басса — біреуін, қатты басса — екеуін.</p>
+    </li>
+    <li>
+      <svg class="les-ladder__pic" viewBox="0 0 172 196" aria-hidden="true"><use href="#les-pic-hand"/></svg>
+      <h3>Автономия</h3>
+      <p class="les-ladder__who">Машина шешеді</p>
+      <p><b>11-апта, түс және қашықтық датчиктері.</b> Машина қолды немесе затты өзі байқайды және қашан қысып, қашан ашу керегін өзі шешеді.</p>
+      <p class="les-ladder__next">Қазір қол басында адам шешеді: ол батырманы басады және карточканы көрсетеді. Қашықтық датчигімен қол басының өзі шешетін болады.</p>
+    </li>
+  </ol>
+</section>
+
+<section class="les-sec les-quiz" id="les-quiz" aria-labelledby="les-quiz-title">
+  <div class="les-quiz__head">
+    <h2 id="les-quiz-title">Шағын тест</h2>
+    <p class="les-quiz__pins" id="les-quiz-pins" role="img"></p>
+    <p class="les-quiz__last" id="les-quiz-last"></p>
+  </div>
+  <div class="les-quiz__box" id="les-quiz-box"></div>
+</section>
+
+<footer class="les-foot">
+  <a class="btn btn--primary les-foot__next" href="#examples">Әрі қарай: өмірде</a>
+  <p>SPIKE Manipulator моделі, авторы — Irwin Wu. LEGO және SPIKE — LEGO Group компаниясының тауар белгілері. Бұл — мұғалімнің оқу материалы, ол LEGO Group-пен байланысты емес және LEGO Group тарапынан мақұлданбаған.</p>
+</footer>
+
+</div>
+
+</section>
+<section id="view-examples" class="view" aria-label="Өмірден мысалдар" hidden>
+<div class="ex">
+  <div class="ex__main">
+    <div class="ex__stage" id="ex-stage">
+      <span class="ex__grip" id="ex-grip"></span>
+      <button type="button" class="ex__toggle" id="ex-toggle"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="ex__ico-play" d="M7 4.5v15l13-7.5z"/><path class="ex__ico-pause" d="M6 4h4.5v16H6zM13.5 4H18v16h-4.5z"/></svg></button>
+    </div>
+    <div class="ex__time">
+      <p class="ex__now" id="ex-now"></p>
+      <ol class="ex__steps" id="ex-steps"></ol>
+    </div>
+  </div>
+  <aside class="ex__side">
+    <header class="ex__head">
+      <h1>Өмірде</h1>
+      <p>Саусақтары бар алты қол мен қармауыш</p>
+    </header>
+    <ul class="ex__list" id="ex-list"></ul>
+    <dl class="ex__facts">
+      <div><dt>Қайда</dt><dd id="ex-where"></dd></div>
+      <div><dt>Жұмысы</dt><dd id="ex-does"></dd></div>
+      <div><dt>Саусақтары</dt><dd id="ex-how"></dd></div>
+      <div><dt>Датчиктер</dt><dd id="ex-sensors"></dd></div>
+      <div><dt>Дербестік</dt><dd><span class="ex__levels" id="ex-levels"></span><span id="ex-auto"></span></dd></div>
+    </dl>
+    <p class="ex__common"><b>Біздің қол басымызбен ұқсастығы</b><span id="ex-common"></span></p>
+    <a class="btn btn--primary ex__next" href="#program">Әрі қарай: бағдарлама</a>
+  </aside>
+</div>
+
+</section>
+<section id="view-program" class="view" aria-label="Бағдарлама" hidden>
+<div class="prog" id="prog">
+  <section class="prog__left" aria-label="Блоктардан құралған бағдарлама">
+    <div class="tasks">
+      <div class="tasks__tabs" id="task-tabs"></div>
+      <p class="tasks__goal" id="task-goal"></p>
+      <p class="tasks__hint" id="task-hint" hidden></p>
+      <table class="tasks__table" id="task-table" hidden></table>
+      <div class="tasks__row">
+        <p class="tasks__status" id="task-status" role="status"></p>
+        <div class="tasks__acts">
+          <button type="button" class="tasks__act" id="task-hint-btn" aria-expanded="false">Кеңес</button>
+          <button type="button" class="tasks__act" id="task-solution">Шешімін көрсету</button>
+          <button type="button" class="tasks__act" id="task-reset">Үстелді қалпына келтіру</button>
+          <button type="button" class="tasks__act" id="task-restart">Қайтадан бастау</button>
+        </div>
+      </div>
+    </div>
+    <div class="prog__ws">
+      <div class="prog__blockly" id="prog-blockly"></div>
+      <div class="prog__tools" id="prog-tools">
+        <button type="button" data-tool="fit" aria-label="Барлық блокты көрсету" title="Барлық блокты көрсету">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l6 6m0-4.5V9H4.5M21 3l-6 6m0-4.5V9h4.5M3 21l6-6m0 4.5V15H4.5M21 21l-6-6m0 4.5V15h4.5"/></svg>
+        </button>
+        <button type="button" data-tool="out" aria-label="Кішірейту" title="Кішірейту">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="7.5"/><path d="M6.5 10.5h8M16 16l5.5 5.5"/></svg>
+        </button>
+        <button type="button" data-tool="in" aria-label="Үлкейту" title="Үлкейту">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="7.5"/><path d="M6.5 10.5h8M10.5 6.5v8M16 16l5.5 5.5"/></svg>
+        </button>
+        <span class="prog__toolgap"></span>
+        <button type="button" data-tool="undo" aria-label="Болдырмау" title="Болдырмау">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.5 5 4 9.5 8.5 14M4.5 9.5H15a5.5 5.5 0 0 1 0 11h-3"/></svg>
+        </button>
+        <button type="button" data-tool="redo" aria-label="Қайталау" title="Қайталау">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 5 20 9.5 15.5 14M19.5 9.5H9a5.5 5.5 0 0 0 0 11h3"/></svg>
+        </button>
+      </div>
+      <div class="prog__run">
+        <button type="button" class="prog__round prog__round--stop" id="prog-stop" aria-label="Бағдарламаны тоқтату" title="Тоқтату">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="2"/></svg>
+        </button>
+        <button type="button" class="prog__round prog__round--play" id="prog-play" aria-label="Бағдарламаны іске қосу" title="Іске қосу">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.2v15.6a1 1 0 0 0 1.5.86l12.4-7.8a1 1 0 0 0 0-1.72L8.5 3.34A1 1 0 0 0 7 4.2z"/></svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <div class="prog__split" id="prog-split" role="separator" tabindex="0" aria-orientation="vertical" aria-label="Блоктар мен модель арасындағы шекара. Сол және оң нұсқар пернелері оны жылжытады."></div>
+
+  <section class="prog__right" aria-label="Қол басының моделі">
+    <div class="prog__stage" id="prog-stage">
+      <div class="stand" role="group" aria-label="Алақан алдындағы тұғырда не тұр">
+        <button type="button" data-obj="" aria-pressed="true">Бос</button>
+        <button type="button" data-obj="cube" aria-pressed="false">Текше</button>
+        <button type="button" data-obj="pencil" aria-pressed="false">Қарындаш</button>
+        <button type="button" data-obj="ball" aria-pressed="false">Доп</button>
+        <button type="button" data-obj="apple" aria-pressed="false">Алма</button>
+      </div>
+      <button type="button" class="lift" id="prog-lift" aria-keyshortcuts="ArrowUp" title="Жоғары нұсқар">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4 5 12h4.5v8h5v-8H19z"/></svg>Қол басын көтеру
+      </button>
+    </div>
+    <div class="hubp">
+      <div class="hubp__hub">
+        <div class="hubp__leds" id="hub-leds" role="img" aria-label="Хаб экраны, 5 × 5 шам"></div>
+        <div class="hubp__pill">
+          <button type="button" id="hub-left" aria-label="Хабтың сол жақ батырмасы"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 12l9-6v12z"/></svg></button>
+          <button type="button" id="hub-center" class="hubp__center" aria-label="Ортаңғы батырма: іске қосу және тоқтату"></button>
+          <button type="button" id="hub-right" aria-label="Хабтың оң жақ батырмасы"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 12 8 6v12z"/></svg></button>
+        </div>
+      </div>
+      <div class="force">
+        <button type="button" class="force__wheel" id="force-btn" aria-label="Күш датчигі, D порты. Басып ұста: жоғарғы шетінде ақырын, төменгі шетінде 10 ньютон. Пробел 4 ньютон күшпен басады, Shift пен пробел 9 ньютон күшпен."><span class="force__cap"></span></button>
+        <p class="force__read"><b id="force-n">0,0</b> Н</p>
+        <p class="force__state" id="force-state">жіберілген</p>
+        <button type="button" class="force__latch" id="force-latch" aria-pressed="false" title="Тінтуірді жіберсең де, датчик басулы қалады">Ұстап тұру</button>
+      </div>
+      <div class="ports">
+        <table class="ports__motors">
+          <tr><td></td><th scope="col">бұрыш</th><th scope="col">жылдамдық</th><th scope="col">қуат</th></tr>
+          <tr><th scope="row">A</th><td><b id="read-A-angle">0</b>°</td><td><b id="read-A-speed">0</b>%</td><td><b id="read-A-power">0</b>%</td></tr>
+          <tr><th scope="row">C</th><td><b id="read-C-angle">0</b>°</td><td><b id="read-C-speed">0</b>%</td><td><b id="read-C-power">0</b>%</td></tr>
+          <tr><th scope="row">E</th><td><b id="read-E-angle">0</b>°</td><td><b id="read-E-speed">0</b>%</td><td><b id="read-E-power">0</b>%</td></tr>
+        </table>
+        <dl class="ports__sensors">
+          <div><dt>B</dt><dd id="read-B">жоқ</dd></div>
+          <div><dt>D</dt><dd id="read-D">0,0 Н</dd></div>
+          <div><dt>F</dt><dd id="read-F">түс жоқ</dd></div>
+        </dl>
+      </div>
+      <div class="person">
+        <div class="cards" id="cards" role="group" aria-label="Түс датчигі алдындағы карточка, F порты. 1–6 пернелері, 0 алып тастайды"></div>
+        <label class="dist">
+          <span class="dist__name">Қашықтық датчигі алдындағы қол</span>
+          <input type="range" id="dist" min="2" max="41" value="41" aria-describedby="dist-out">
+          <output id="dist-out" for="dist">жоқ</output>
+        </label>
+      </div>
+    </div>
+  </section>
+</div>
+
+</section>
+</main>
+<div id="toasts" class="toasts" role="status" aria-live="polite"></div>
+<script src="../vendor/three.min.js"></script>
+<script src="../vendor/three-addons.js"></script>
+<script src="../vendor/blockly/blockly_compressed_vertical.js"></script>
+<script src="../vendor/blockly/blocks_compressed.js"></script>
+<script src="../vendor/blockly/blocks_compressed_vertical.js"></script>
+<script src="../vendor/blockly/messages.js"></script>
+<script src="../vendor/blockly/msg_kk.js"></script>
+<script src="js/core.js"></script>
+<script src="js/robot.js"></script>
+<script src="../js/hero.js"></script>
+<script src="js/lesson.js"></script>
+<script src="js/scenes.js"></script>
+<script src="js/examples.js"></script>
+<script src="js/blocks.js"></script>
+<script src="js/vm.js"></script>
+<script src="js/sim.js"></script>
+<script src="js/program.js"></script>
+<script>
+RA.boot();
+// Fonts load after the page works: a school network that hangs on Google must not hold up the lesson.
+document.head.append(Object.assign(document.createElement('link'), { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&family=Unbounded:wght@500;700;900&display=swap' }));
+</script>
+</body>
+</html>
