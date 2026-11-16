@@ -19,7 +19,9 @@
 .raSwatch > .blocklyPath { stroke: #fff; stroke-width: 1.5px; }
 
 /* Category column. */
-.blocklyToolboxDiv { width: 64px; }
+/* Its scrollbar would take 15 of the 64 px (Windows, Linux) and cover the labels: the column scrolls by wheel or touch. */
+.blocklyToolboxDiv { width: 64px; scrollbar-width: none; }
+.blocklyToolboxDiv::-webkit-scrollbar { display: none; }
 .scratchCategoryMenu { width: 64px; padding: 4px 0; color: #4a4a4a; font: 500 9px/1.15 "Helvetica Neue", Helvetica, Arial, sans-serif; }
 .scratchCategoryMenuItem { margin: 0 2px 2px; padding: 8px 0 7px; border-radius: 14px; }
 .scratchCategoryMenuItem:hover { color: #000 !important; background: #f7f7f7; }

@@ -17,7 +17,8 @@ const ALLOW = {
       + " DATA_CHANGEVARIABLEBY: '', DATA_ADDTOLIST: '', DATA_DELETEOFLIST: '', DATA_DELETEALLOFLIST: '', DATA_INSERTATLIST: '',"
       + " DATA_REPLACEITEMOFLIST: '', DATA_ITEMOFLIST: '', DATA_ITEMNUMOFLIST: '', DATA_LENGTHOFLIST: '', DATA_LISTCONTAINSITEM: '',"
       + " PROCEDURES_DEFINITION: '', CATEGORY_VARIABLES: '', NEW_VARIABLE_TITLE: '', DELETE_VARIABLE_CONFIRMATION: '', PROCEDURE_USED: '',"],
-    ["workspace.toolbox_.categoryMenu_.categories_[10].label_.textContent = '';",
+    ["[[5, ''], [8, ''], [10, '']].forEach(([i, name]) => { const label = workspace.toolbox_.categoryMenu_.categories_[i].label_;"
+      + " label.textContent = name; label.style.whiteSpace = ''; });",
       "[[7, ''], [8, ''], [9, '']].forEach(([i, name]) => { const label = workspace.toolbox_.categoryMenu_.categories_[i].label_;"
       + " label.textContent = name; label.style.whiteSpace = ''; });"],
   ],

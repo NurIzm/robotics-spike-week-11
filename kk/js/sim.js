@@ -407,7 +407,9 @@
       return null;
     };
     // The grip the table of task 2 files a lift under: 2 = A and C closed, 3 = with the thumb, 0 = something else.
-    const gripKind = () => (closed('A') && closed('C') ? (closed('E') ? 3 : 2) : 0);
+    // A finger still on its way does not count: a lift right after the card must not file a slip under three fingers.
+    const shut = (p) => closed(p) && (motors[p].push > 0 || motors[p].vel === 0);
+    const gripKind = () => (shut('A') && shut('C') ? (shut('E') ? 3 : 2) : 0);
 
     const report = (held, text) => {
       lift.told = true;

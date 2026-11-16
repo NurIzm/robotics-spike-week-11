@@ -156,7 +156,7 @@
 .dist__name { flex: 0 1 auto; max-width: 112px; line-height: 1.15; }
 .dist input { flex: 1; min-width: 70px; margin: 0; accent-color: var(--azure-deep); }
 .dist output { min-width: 50px; font: 700 14px var(--font-mono); color: var(--ink); white-space: nowrap; }
-.prog__stage .no-webgl { inset: 12px 12px auto; }
+.prog__stage .no-webgl { inset: auto 12px 66px; }   /* above «Поднять кисть»: the object chips own the top */
 
 /* The splitter decides how wide each panel is, so these follow the panel, not the window. */
 @container tasks (max-width: 700px) {

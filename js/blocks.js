@@ -454,8 +454,12 @@
         if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); workspace.toolbox_.setSelectedItem(c); }
       });
     });
-    // The longest name wraps in the narrow column, at this hyphen and nowhere else.
-    workspace.toolbox_.categoryMenu_.categories_[10].label_.textContent = 'Допол\u00ADнительные моторы';
+    // The long names wrap in the narrow column: one-word names at this hyphen, two-word names at the space.
+    [[5, 'Управ\u00ADление'], [8, 'Пере\u00ADменные'], [10, 'Допол\u00ADнительные моторы']].forEach(([i, name]) => {
+      const label = workspace.toolbox_.categoryMenu_.categories_[i].label_;
+      label.textContent = name;
+      label.style.whiteSpace = 'normal';
+    });
     // scratch-gui refreshes the palette after custom-block changes, here it is on us.
     let procs = '';
     const syncPalette = () => {

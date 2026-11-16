@@ -429,7 +429,7 @@
   };
   // Above the start hat, as wide as the column.
   const note = (text) => `<comment pinned="true" w="567" h="80" x="48" y="10" minimized="false">${text}</comment>`;
-  RA.STARTER_XML = designer({ note: note('Түс датчигіне қызыл карточканы көрсет: бас бармақ бүгіледі. Карточканы алып таста: ол жазылуы керек, бірақ ондай блок жоқ. Оны қос!') });
+  RA.STARTER_XML = designer({ note: note('Түс датчигіне қызыл карточканы көрсет: бас бармақ бүгіледі. Карточканы алып таста: бас бармақ жазылуы керек, бірақ ондай блок жоқ. Оны қос!') });
   RA.SOLUTION_XML = designer({ none: [goTo('E', 0)] });
   RA.ONEPRESS_XML = designer({ hard: [goTo('E', 80)], release: [goTo('E', 0)], none: [goTo('E', 0)] });
   RA.HANDOVER_XML = `<xml>${column(48, 48, [start(), ...SETUP, goTo('A', 90), goTo('C', 270), goTo('E', 80),

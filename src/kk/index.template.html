@@ -24,7 +24,9 @@
 .les-build__steps span { white-space: nowrap; }
 /* Program view: «Ұстап тұру» stays on one line inside its button, «Қашықтық датчигі алдындағы қол» takes two lines, not three. */
 .force__latch { white-space: nowrap; padding: 0 5px; }
-.dist__name { max-width: 128px; }</style>
+.dist__name { max-width: 128px; }
+/* «қатты басылған» is wider than the 84 px force column of a narrow right panel (a 1024 px screen): it ran into «B» of the port readouts. */
+@container right (max-width: 500px) { .force__state { font-size: 11px; } }</style>
 </head>
 <body>
 <header class="topbar">

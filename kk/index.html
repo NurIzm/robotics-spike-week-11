@@ -24,7 +24,9 @@
 .les-build__steps span { white-space: nowrap; }
 /* Program view: «Ұстап тұру» stays on one line inside its button, «Қашықтық датчигі алдындағы қол» takes two lines, not three. */
 .force__latch { white-space: nowrap; padding: 0 5px; }
-.dist__name { max-width: 128px; }</style>
+.dist__name { max-width: 128px; }
+/* «қатты басылған» is wider than the 84 px force column of a narrow right panel (a 1024 px screen): it ran into «B» of the port readouts. */
+@container right (max-width: 500px) { .force__state { font-size: 11px; } }</style>
 </head>
 <body>
 <header class="topbar">
@@ -328,7 +330,7 @@
             <div class="blk blk--hat blk--event"><svg class="blk__ico"><use href="#les-ico-force"/></svg><span class="blk__port">D</span><span class="blk__dd">басылған</span>кезде</div>
             <div class="blk blk--motor"><svg class="blk__ico"><use href="#les-ico-motor"/></svg><span class="blk__port">C</span><span class="blk__dd">ең қысқа жолмен</span><span class="blk__num">270</span>позициясына бару</div>
           </div>
-          <p>Ақырын басылды: C саусағы бүгіледі. 0-ден 270-ке дейінгі ең қысқа жол — сағат тіліне қарсы 90°-қа бұрылу.</p>
+          <p>Ақырын басылды: C саусағы бүгіледі. 0-&#8288;ден 270-&#8288;ке дейінгі ең қысқа жол — сағат тіліне қарсы 90°-қа бұрылу.</p>
         </article>
         <article class="les-stack" data-stack="hard">
           <div class="les-prog" role="img" aria-label="D қатты басылған кезде: A ең қысқа жолмен 90 позициясына бару.">
